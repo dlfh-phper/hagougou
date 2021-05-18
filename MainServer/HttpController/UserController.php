@@ -14,7 +14,6 @@ use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Required;
 use Imi\Validate\Annotation\Regex;
 use Imi\Aop\Annotation\Inject;
-use ImiApp\MainServer\Service\UserService;
 /**
  * @Controller("/User/")
  */

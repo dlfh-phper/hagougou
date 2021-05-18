@@ -159,7 +159,7 @@ return [
                 'ImiApp\MainServer\Model' =>  [
                     // 在该命名空间下，允许生成的表
                     'tables'    =>  [
-                        'user',
+                        'room'
                     ],
                 ],
             ]

@@ -10,21 +10,27 @@ use Imi\HttpValidate\Annotation\HttpValidation;
 use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Required;
 use Imi\Validate\Annotation\Regex;
+use Imi\Aop\Annotation\Inject;
 /**
- * @Controller
+ * @Controller("/Index/")
  */
 class IndexController extends SingletonHttpController
 {
     /**
+     * @Inject("BannerService")
+     * @var
+     */
+    protected $BannerService;
+    /**
      * @Action
-     * @Route("/")
-     *
+     * @Route(method="POST")
      * @return void
      */
-    public function login()
+    public function banner()
     {
+        $info=$this->BannerService->getBanner('首页');
         return [
-            'data'  =>  'indexssss',
+            'data'=>$info
         ];
     }
 

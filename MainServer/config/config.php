@@ -53,8 +53,21 @@ return [
                 \Imi\Server\WebSocket\Middleware\RouteMiddleware::class,
             ],
         ],
-        'GroupRedis'    =>    [
-            'redisPool'    =>    'redis',
+        'ServerGroup' => [
+            'status'       => true , // 启用
+            'groupHandler' => 'GroupRedis', // 分组处理器，目前仅支持 Redis
+        ],
+        // 分组 Redis 驱动
+        'GroupRedis' => [
+            'redisPool' => 'redis',
+            'redisDb' => 0, // redis中第几个库
+            'heartbeatTimespan' => 5, // 心跳时间，单位：秒.
+            'heartbeatTtl' => 8, // 心跳数据过期时间，单位：秒.
+            'key' => null, // 该服务的分组键，默认为 imi:命名空间:connect_group
+        ],
+        // 分组本地驱动，仅支持当前 Worker 进程
+        'GroupLocal' => [
+            // 无配置项
         ],
         'ConnectContextStore'   =>  [
             'handlerClass'  =>  \Imi\Server\ConnectContext\StoreHandler\Local::class,
