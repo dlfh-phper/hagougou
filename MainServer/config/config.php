@@ -42,6 +42,9 @@ return [
                 'php'
             ],
         ],
+        'HttpErrorHandler' =>[
+            'handler'   => \ImiApp\MainServer\ErrorHandler\HttpErrorHandler::class,
+        ],
         'WebSocketDispatcher'    =>    [
             'middlewares'    =>    [
                 \Imi\Server\WebSocket\Middleware\RouteMiddleware::class,
