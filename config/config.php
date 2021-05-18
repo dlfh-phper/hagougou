@@ -59,7 +59,7 @@ return [
                      'port'        => 3306,
                      'username'    => 'root',
                      'password'    => 'hagougourtc',
-                     'database'    => 'database_name',
+                     'database'    => 'hagougou',
                      'charset'     => 'utf8mb4',
                  ],
              ],
@@ -77,7 +77,7 @@ return [
                      'port'        => 3306,
                      'username'    => 'root',
                      'password'    => 'hagougourtc',
-                     'database'    => 'database_name',
+                     'database'    => 'hagougou',
                      'charset'     => 'utf8mb4',
                  ],
              ]
