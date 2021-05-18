@@ -14,6 +14,7 @@ use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Required;
 use Imi\Validate\Annotation\Regex;
 use Imi\Aop\Annotation\Inject;
+use ImiApp\MainServer\Service\UserService;
 /**
  * @Controller("/User/")
  */
@@ -22,7 +23,7 @@ class UserController extends SingletonHttpController
 
     /**
      * @Inject("UserService")
-     * @var
+     * @var ImiApp\MainServer\Service\UserService;
      */
     protected $UserService;
     /**
@@ -40,10 +41,10 @@ class UserController extends SingletonHttpController
     public function login(string $phone,string $code)
     {
         $ip = $this->request->getServerParam('remote_addr');
-        $this->UseerService->login($phone,$ip,$code);
-        return [
-            'data'=>Session::getID()
-        ];
+        $this->UserService->login($phone,$ip,$code);
+//        return [
+//            'data'=>Session::getID()
+//        ];
     }
 
     /**
@@ -59,11 +60,11 @@ class UserController extends SingletonHttpController
      */
     public function wxlogin(array $wxdata,string $phone)
     {
-        $ip = $this->request->getServerParam('remote_addr');
-        $this->UserService->wxlogin($phone,$ip,$wxdata);
-        return [
-            'data'=>Session::getID()
-        ];
+//        $ip = $this->request->getServerParam('remote_addr');
+//        $this->UserService->wxlogin($phone,$ip,$wxdata);
+//        return [
+//            'data'=>Session::getID()
+//        ];
     }
 
     /**
@@ -77,10 +78,10 @@ class UserController extends SingletonHttpController
      */
     public function Qqlogin(array $qqdata,string $phone)
     {
-        $ip = $this->request->getServerParam('remote_addr');
-        $this->UserService->qqlogin($phone,$ip,$qqdata);
-        return [
-            'data'=>Session::getID()
-        ];
+//        $ip = $this->request->getServerParam('remote_addr');
+//        $this->UserService->qqlogin($phone,$ip,$qqdata);
+//        return [
+//            'data'=>Session::getID()
+//        ];
     }
 }

@@ -61,6 +61,16 @@ class UserService
             $this->register($phone,$ip);
         }
     }
+
+    /**
+     * Date: 2021/5/18
+     * Time: 15:39
+     * @param string $phone
+     * @param string $ip
+     * @param array $wxdata
+     * @throws BusinessException
+     * 微信授权登录
+     */
     public function wxlogin(string $phone,string $ip,array $wxdata)
     {
         $info=$this->getByPhone($phone);
@@ -90,7 +100,6 @@ class UserService
     /**
      * Date: 2021/5/18
      * Time: 15:25
-     * @Action
      * @param string $phone
      * @param string $ip
      * @param array $qqdata
