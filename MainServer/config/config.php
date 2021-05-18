@@ -12,6 +12,7 @@ return [
         'ImiApp\MainServer\Exception',
         'ImiApp\MainServer\ErrorHandler',
         'ImiApp\MainServer\HttpController',
+        'ImiApp\MainServer\Helper',
     ],
     'beans'    =>    [
         'SessionManager'    =>    [

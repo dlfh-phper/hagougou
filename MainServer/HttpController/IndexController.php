@@ -1,14 +1,17 @@
 <?php
 namespace ImiApp\MainServer\HttpController;
 
-use Imi\Controller\HttpController;
+
 use Imi\Controller\SingletonHttpController;
 use Imi\Server\Route\Annotation\Route;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;
-
+use Imi\HttpValidate\Annotation\HttpValidation;
+use Imi\Validate\Annotation\Integer;
+use Imi\Validate\Annotation\Required;
+use Imi\Validate\Annotation\Regex;
 /**
- * @Controller("/")
+ * @Controller
  */
 class IndexController extends SingletonHttpController
 {
