@@ -18,7 +18,7 @@ class IndexController extends SingletonHttpController
      *
      * @return void
      */
-    public function index()
+    public function login()
     {
         return [
             'data'  =>  'indexssss',
