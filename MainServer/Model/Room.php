@@ -4,13 +4,14 @@
 namespace ImiApp\MainServer\Model;
 
 
-use ImiApp\MainServer\Model\Base\BannerBase;
+use Imi\Bean\Annotation\Inherit;
+use ImiApp\MainServer\Model\Base\RoomBase;
 
 /**
  * room
  * @Inherit
  */
-class Room extends BannerBase
+class Room extends RoomBase
 {
 
 }

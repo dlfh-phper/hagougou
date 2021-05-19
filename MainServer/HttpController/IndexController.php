@@ -22,28 +22,56 @@ class IndexController extends SingletonHttpController
      */
     protected $BannerService;
     /**
+     * @Inject("RoomService")
+     */
+    protected $RoomService;
+    /**
+     * @Inject("UserService")
+     */
+    protected $UserService;
+    /**
      * @Action
      * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="position", message="手机号不能为空")
      * @return void
+     * 轮播图
      */
-    public function banner()
+    public function banner(string $position)
     {
-        $info=$this->BannerService->getBanner('首页');
+        $info=$this->BannerService->getBanner($position);
         return [
             'data'=>$info
         ];
     }
 
     /**
+     * Date: 2021/5/19
+     * Time: 10:38
      * @Action
-     *
-     * @return void
+     * @Route(method="POST")
+     * @return string[]
+     * 首页房间列表
      */
-    public function api()
+    public function indexRoom()
     {
-        return [
-            'data'  =>  'api',
-        ];
+         return [
+           'data'=> $this->RoomService->indexRoom()
+         ];
+
     }
 
+    /**
+     * Date: 2021/5/19
+     * Time: 11:06
+     * @Action
+     * @Route(method="POST")
+     * @return array
+     */
+    public function getIndexRandUser()
+    {
+        return [
+            'data' =>$this->UserService->getRandUserinfo()
+        ];
+    }
 }

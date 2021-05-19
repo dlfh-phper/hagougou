@@ -159,4 +159,17 @@ class UserService
         $info->setLoginTime(time());
         $info->update();
     }
+
+    /**
+     * Date: 2021/5/19
+     * Time: 11:04
+     * @return \Imi\Db\Query\Interfaces\IQuery
+     * 首页推荐用户，随机返回两条
+     */
+    public function getRandUserinfo()
+    {
+        $count=User::count('user_id');
+        $info=User::query()->page(mt_rand(1,$count),2);
+        return $info;
+    }
 }
