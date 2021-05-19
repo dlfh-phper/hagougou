@@ -21,6 +21,8 @@ use Imi\Model\Annotation\Entity;
   `giftvalue` int(11) DEFAULT '0' COMMENT '房间热度',
   `isStop` int(11) DEFAULT '0' COMMENT '0关闭 2开始',
   `countvalue` int(11) NOT NULL DEFAULT '0' COMMENT '总热度',
+  `cover` varchar(255) NOT NULL COMMENT '封面图',
+  `label` varchar(255) NOT NULL COMMENT '标签',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $id 
@@ -32,6 +34,8 @@ use Imi\Model\Annotation\Entity;
  * @property int $giftvalue 房间热度
  * @property int $isStop 0关闭 2开始
  * @property int $countvalue 总热度
+ * @property string $cover 封面图
+ * @property string $label 标签
  */
 abstract class RoomBase extends Model
 {
@@ -292,6 +296,64 @@ abstract class RoomBase extends Model
     public function setCountvalue($countvalue)
     {
         $this->countvalue = $countvalue;
+        return $this;
+    }
+
+    /**
+     * 封面图
+     * cover
+     * @Column(name="cover", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $cover;
+
+    /**
+     * 获取 cover - 封面图
+     *
+     * @return string
+     */ 
+    public function getCover()
+    {
+        return $this->cover;
+    }
+
+    /**
+     * 赋值 cover - 封面图
+     * @param string $cover cover
+     * @return static
+     */ 
+    public function setCover($cover)
+    {
+        $this->cover = $cover;
+        return $this;
+    }
+
+    /**
+     * 标签
+     * label
+     * @Column(name="label", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $label;
+
+    /**
+     * 获取 label - 标签
+     *
+     * @return string
+     */ 
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * 赋值 label - 标签
+     * @param string $label label
+     * @return static
+     */ 
+    public function setLabel($label)
+    {
+        $this->label = $label;
         return $this;
     }
 
