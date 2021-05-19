@@ -44,6 +44,45 @@ class RoomService
            }catch (BusinessException $businessException){
                throw new BusinessException($businessException->getMessage());
            }
+       }
 
+    /**
+     * Date: 2021/5/19
+     * Time: 11:58
+     * @param string $page
+     * @param string $page_size
+     * @return array
+     *按照房间热度排列
+     */
+       public function roomRanking(string $page,string $page_size)
+       {
+            $list=Room::query()->order('giftvalue','desc')->page(($page-1)*$page_size,$page_size)->select()->getArray();
+            $count=Room::count('id');
+            return [
+                'list'=>$list,
+                'count'=>$count
+            ];
+       }
+
+    /**
+     * Date: 2021/5/19
+     * Time: 14:06
+     * @param string $label
+     * @return array
+     * 通过标签搜索房间
+     */
+       public function roomLabelSearch(string $label)
+       {
+           $list=Room::query()->whereRaw("label->'$.label'='{$label}'")->select()->getArray();
+           $count=Room::query()->whereRaw("label->'$.label'='{$label}'")->count('id');
+           return [
+               'list'=>$list,
+               'count'=>$count
+           ];
+       }
+
+       public function getCollectionRoom(string $page,string $page_size,int $uid)
+       {
+           
        }
 }

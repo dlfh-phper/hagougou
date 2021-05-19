@@ -43,7 +43,7 @@ class UserService
      * @throws BusinessException
      * 验证码登录
      */
-    public function login(string $phone,string $code,string $ip)
+    public function login(string $phone,string $ip,string $code)
     {
         $info=$this->getByPhone($phone);
         if($info){

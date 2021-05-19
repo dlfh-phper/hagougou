@@ -11,6 +11,8 @@ use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Required;
 use Imi\Validate\Annotation\Regex;
 use Imi\Aop\Annotation\Inject;
+use Imi\Server\Session\Session;
+
 /**
  * @Controller("/Index/")
  */
@@ -55,8 +57,10 @@ class IndexController extends SingletonHttpController
      */
     public function indexRoom()
     {
-         return [
-           'data'=> $this->RoomService->indexRoom()
+
+        return [
+           'data'=> $this->RoomService->indexRoom(),
+//           'data'=> Session::get('user_id')
          ];
 
     }
