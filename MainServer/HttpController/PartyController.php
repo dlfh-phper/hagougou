@@ -31,6 +31,7 @@ class PartyController extends  SingletonHttpController
      * @HttpValidation
      * @Required(name="page", default="1")
      * @Required(name="page_size", default="10")
+     * 推荐位根据热度排列
      */
     public function recommend(string $page,string $page_size)
     {
@@ -47,6 +48,7 @@ class PartyController extends  SingletonHttpController
      * @HttpValidation
      * @Required(name="label", message="标签不能为空")
      * @return array
+     * 标签搜索
      */
     public function roomLabelSearch(string $label)
     {

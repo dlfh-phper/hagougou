@@ -12,6 +12,7 @@ use Imi\Validate\Annotation\Required;
 use Imi\Validate\Annotation\Regex;
 use Imi\Aop\Annotation\Inject;
 use Imi\Server\Session\Session;
+use Imi\Config;
 
 /**
  * @Controller("/Index/")

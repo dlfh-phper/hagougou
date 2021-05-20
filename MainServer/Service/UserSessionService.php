@@ -8,14 +8,20 @@ use Imi\Aop\Annotation\Inject;
 use Imi\ConnectContext;
 use Imi\RequestContext;
 use Imi\Server\Session\Session;
+use Imi\Bean\Annotation\Bean;
 
+/**
+ * Class UserSessionService
+ * @package ImiApp\MainServer\Service
+ * @Bean("UserSessionService");
+ */
 class UserSessionService
 {
     /**
-     * @Inject("UserSercive")
+     * @Inject("UserService")
      * @var
      */
-    protected $UserSercive;
+    protected $UserService;
     /**
      * 用户id
      */
@@ -65,7 +71,7 @@ class UserSessionService
     {
         if(!$this->UserInfo)
         {
-            $this->UserInfo=$this->UserSercive->getUserInfo($this->UserId);
+            $this->UserInfo=$this->UserService->getUserInfo($this->UserId);
         }
         return $this->UserInfo;
     }

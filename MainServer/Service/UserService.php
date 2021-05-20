@@ -11,6 +11,8 @@ use ImiApp\MainServer\Helper\Helper;
 use ImiApp\MainServer\Model\User;
 
 /**
+ * Class UserService
+ * @package ImiApp\MainServer\Service
  * @Bean("UserService")
  */
 class UserService
