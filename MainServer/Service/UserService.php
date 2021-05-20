@@ -22,7 +22,7 @@ class UserService
      * @param string $ip
      * 注册
      */
-    public function register(string $phone, string $ip)
+    public function register(string $phone, string $ip,$data)
     {
         $info=User::newInstance();
         $info->phone=$phone;
@@ -30,6 +30,12 @@ class UserService
         $info->register_time=time();
         $info->last_time=time();
         $info->login_time=time();
+        $info->wxopenid=$data['openid'] ?? '';
+        $info->qqopenid=$data['openid'] ?? '';
+        $info->wxhead=$data['head'] ?? '';
+        $info->qqhead=$data['head'] ?? '';
+        $info->wxname=$data['name'] ?? '';
+        $info->qqname=$data['name'] ?? '';
         $info->save();
         Session::set('user_id',$info->getUserId());
     }
@@ -57,8 +63,9 @@ class UserService
                throw new BusinessException('验证码错误');
             }
         }else{
+            $data=[];
             //不存在就注册
-            $this->register($phone,$ip);
+            $this->register($phone,$ip,$data);
         }
     }
 
@@ -93,7 +100,7 @@ class UserService
                 }
             }
         }else{
-            $this->register($phone,$ip);
+            $this->register($phone,$ip,$wxdata);
         }
     }
 
@@ -128,7 +135,7 @@ class UserService
                 }
             }
         }else{
-            $this->register($phone,$ip);
+            $this->register($phone,$ip,$qqdata);
         }
     }
     /**
@@ -171,5 +178,19 @@ class UserService
         $count=User::count('user_id');
         $info=User::query()->page(mt_rand(1,$count),2);
         return $info;
+    }
+
+    /**
+     * Date: 2021/5/19
+     * Time: 15:48
+     * @param int $id
+     * @return User|null
+     * 用户信息
+     */
+    public function getUserInfo(int $id)
+    {
+        $info=User::find(['user_id'=>$id]);
+        return $info;
+
     }
 }

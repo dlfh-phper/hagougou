@@ -19,10 +19,16 @@ use Imi\Model\Annotation\Entity;
   `user_id` int(11) NOT NULL COMMENT '开播人',
   `title` varchar(255) NOT NULL COMMENT '标题',
   `giftvalue` int(11) DEFAULT '0' COMMENT '房间热度',
-  `isStop` int(11) DEFAULT '0' COMMENT '0关闭 2开始',
+  `isStop` int(11) DEFAULT '0' COMMENT '0关闭 1开始',
   `countvalue` int(11) NOT NULL DEFAULT '0' COMMENT '总热度',
   `cover` varchar(255) NOT NULL COMMENT '封面图',
   `label` varchar(255) NOT NULL COMMENT '标签',
+  `introduce` varchar(255) NOT NULL COMMENT '简介',
+  `password` varchar(255) DEFAULT NULL COMMENT '密码',
+  `eception` varchar(255) NOT NULL COMMENT '接待语',
+  `welcome` varchar(255) NOT NULL COMMENT '欢迎语',
+  `blacklist` varchar(255) NOT NULL COMMENT '黑名单列表',
+  `isPush` int(11) NOT NULL DEFAULT '0' COMMENT '0不推送 2推送',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $id 
@@ -32,10 +38,16 @@ use Imi\Model\Annotation\Entity;
  * @property int $userId 开播人
  * @property string $title 标题
  * @property int $giftvalue 房间热度
- * @property int $isStop 0关闭 2开始
+ * @property int $isStop 0关闭 1开始
  * @property int $countvalue 总热度
  * @property string $cover 封面图
  * @property string $label 标签
+ * @property string $introduce 简介
+ * @property string $password 密码
+ * @property string $eception 接待语
+ * @property string $welcome 欢迎语
+ * @property string $blacklist 黑名单列表
+ * @property int $isPush 0不推送 2推送
  */
 abstract class RoomBase extends Model
 {
@@ -242,7 +254,7 @@ abstract class RoomBase extends Model
     }
 
     /**
-     * 0关闭 2开始
+     * 0关闭 1开始
      * isStop
      * @Column(name="isStop", type="int", length=11, accuracy=0, nullable=true, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var int
@@ -250,7 +262,7 @@ abstract class RoomBase extends Model
     protected $isStop;
 
     /**
-     * 获取 isStop - 0关闭 2开始
+     * 获取 isStop - 0关闭 1开始
      *
      * @return int
      */ 
@@ -260,7 +272,7 @@ abstract class RoomBase extends Model
     }
 
     /**
-     * 赋值 isStop - 0关闭 2开始
+     * 赋值 isStop - 0关闭 1开始
      * @param int $isStop isStop
      * @return static
      */ 
@@ -354,6 +366,180 @@ abstract class RoomBase extends Model
     public function setLabel($label)
     {
         $this->label = $label;
+        return $this;
+    }
+
+    /**
+     * 简介
+     * introduce
+     * @Column(name="introduce", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $introduce;
+
+    /**
+     * 获取 introduce - 简介
+     *
+     * @return string
+     */ 
+    public function getIntroduce()
+    {
+        return $this->introduce;
+    }
+
+    /**
+     * 赋值 introduce - 简介
+     * @param string $introduce introduce
+     * @return static
+     */ 
+    public function setIntroduce($introduce)
+    {
+        $this->introduce = $introduce;
+        return $this;
+    }
+
+    /**
+     * 密码
+     * password
+     * @Column(name="password", type="varchar", length=255, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * 获取 password - 密码
+     *
+     * @return string
+     */ 
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * 赋值 password - 密码
+     * @param string $password password
+     * @return static
+     */ 
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * 接待语
+     * eception
+     * @Column(name="eception", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $eception;
+
+    /**
+     * 获取 eception - 接待语
+     *
+     * @return string
+     */ 
+    public function getEception()
+    {
+        return $this->eception;
+    }
+
+    /**
+     * 赋值 eception - 接待语
+     * @param string $eception eception
+     * @return static
+     */ 
+    public function setEception($eception)
+    {
+        $this->eception = $eception;
+        return $this;
+    }
+
+    /**
+     * 欢迎语
+     * welcome
+     * @Column(name="welcome", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $welcome;
+
+    /**
+     * 获取 welcome - 欢迎语
+     *
+     * @return string
+     */ 
+    public function getWelcome()
+    {
+        return $this->welcome;
+    }
+
+    /**
+     * 赋值 welcome - 欢迎语
+     * @param string $welcome welcome
+     * @return static
+     */ 
+    public function setWelcome($welcome)
+    {
+        $this->welcome = $welcome;
+        return $this;
+    }
+
+    /**
+     * 黑名单列表
+     * blacklist
+     * @Column(name="blacklist", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $blacklist;
+
+    /**
+     * 获取 blacklist - 黑名单列表
+     *
+     * @return string
+     */ 
+    public function getBlacklist()
+    {
+        return $this->blacklist;
+    }
+
+    /**
+     * 赋值 blacklist - 黑名单列表
+     * @param string $blacklist blacklist
+     * @return static
+     */ 
+    public function setBlacklist($blacklist)
+    {
+        $this->blacklist = $blacklist;
+        return $this;
+    }
+
+    /**
+     * 0不推送 2推送
+     * isPush
+     * @Column(name="isPush", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $isPush;
+
+    /**
+     * 获取 isPush - 0不推送 2推送
+     *
+     * @return int
+     */ 
+    public function getIsPush()
+    {
+        return $this->isPush;
+    }
+
+    /**
+     * 赋值 isPush - 0不推送 2推送
+     * @param int $isPush isPush
+     * @return static
+     */ 
+    public function setIsPush($isPush)
+    {
+        $this->isPush = $isPush;
         return $this;
     }
 

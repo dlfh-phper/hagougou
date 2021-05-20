@@ -32,16 +32,21 @@ class IndexController extends SingletonHttpController
      */
     protected $UserService;
     /**
+     * @Inject("RedisService")
+     */
+    protected $RedisService;
+    /**
      * @Action
      * @Route(method="POST")
      * @HttpValidation
-     * @Required(name="position", message="手机号不能为空")
+     * @Required(name="position", message="位置信息不能为空")
      * @return void
      * 轮播图
      */
     public function banner(string $position)
     {
         $info=$this->BannerService->getBanner($position);
+//        $info=$position ?? '6';
         return [
             'data'=>$info
         ];
@@ -76,6 +81,31 @@ class IndexController extends SingletonHttpController
     {
         return [
             'data' =>$this->UserService->getRandUserinfo()
+        ];
+    }
+
+    /**
+     * Date: 2021/5/20
+     * Time: 10:13
+     * @Action
+     * @Route(method="POST")
+     */
+    public function SendindexMessage(string $data)
+    {
+        $this->RedisService->setRedislpush($data);
+    }
+
+    /**
+     * Date: 2021/5/20
+     * Time: 10:18
+     * @Action
+     * @Route(method="POST")
+     * @return array
+     */
+    public function getindexMessage()
+    {
+        return [
+            'data'=>$this->RedisService->getRedislpushMessage()
         ];
     }
 }
