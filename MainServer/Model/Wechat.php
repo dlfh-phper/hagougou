@@ -2,13 +2,13 @@
 namespace ImiApp\MainServer\Model;
 
 use Imi\Bean\Annotation\Inherit;
-use ImiApp\MainServer\Model\Base\RoomBase;
+use ImiApp\MainServer\Model\Base\WechatBase;
 
 /**
- * room
+ * wechat
  * @Inherit
  */
-class Room extends RoomBase
+class Wechat extends WechatBase
 {
 
 }

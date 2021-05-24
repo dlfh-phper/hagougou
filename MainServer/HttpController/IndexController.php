@@ -109,4 +109,23 @@ class IndexController extends SingletonHttpController
             'data'=>$this->RedisService->getRedislpushMessage()
         ];
     }
+
+    /**
+     * Date: 2021/5/24
+     * Time: 14:52
+     * @Action
+     * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="search", message="搜索信息不能为空")
+     * @Required(name="page", default="1")
+     * @Required(name="page_size", default="10")
+     * @param string $search
+     * @return array
+     */
+    public function getUserSearch(string $search,string $page,string $page_size)
+    {
+        return [
+            'data' => $this->UserService->nickNameAndIdSearch($search,$page,$page_size),
+        ];
+    }
 }

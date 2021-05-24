@@ -195,4 +195,21 @@ class UserService
         return $info;
 
     }
+
+    /**
+     * Date: 2021/5/24
+     * Time: 14:52
+     * @param string $Search
+     * @return \Imi\Db\Query\Interfaces\IResult
+     * 用户昵称 编号搜索
+     */
+    public function nickNameAndIdSearch(string $Search,string $page,string $page_size)
+    {
+        $info=User::query()->whereRaw("nickname LIKE '%{$Search}%' OR user_id LIKE '%{$Search}%'")->page(($page-1)*$page_size,$page_size)->order('user_id','desc')->select()->getArray();
+        $count=User::query()->whereRaw("nickname LIKE '%{$Search}%' OR user_id LIKE '%{$Search}%'")->select()->getRowCount();
+        return [
+            'list'=>$info,
+            'count'=>$count
+        ];
+    }
 }
