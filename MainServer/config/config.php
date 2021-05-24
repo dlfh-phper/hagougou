@@ -76,12 +76,9 @@ return [
             'lockId'    =>  'redis',
         ],
         'aliyun' => [
-            'key' => 'LTAI5tP78X7mh6NPHkrfdmnB',
-            'Secret' => 'hYgfwMUElpKkc72wP7Q0IuFIYe2O8E',
-            'endpoint' => 'https://oss-cn-shanghai-internal.aliyuncs.com',
-            'bucket' => 'hagougou',
-            'templateCode' => 'SMS_216980239',
-            'signName' => '哈狗狗直播'
+            'key' => '',
+            'Secret' => '',
+            'bucket' => ''
         ]
     ],
 ];
