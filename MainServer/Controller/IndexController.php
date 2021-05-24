@@ -7,6 +7,7 @@ use Imi\Server\Route\Annotation\WebSocket\WSRoute;
 use Imi\Server\Route\Annotation\WebSocket\WSAction;
 use Imi\Server\Route\Annotation\WebSocket\WSController;
 use Imi\Server\Route\Annotation\WebSocket\WSMiddleware;
+use Imi\Server\Server;
 
 /**
  * 数据收发测试
@@ -24,6 +25,7 @@ class IndexController extends WebSocketController
      */
     public function send($data)
     {
+        ConnectContext::get('','','');
         $clientInfo = $this->server->getSwooleServer()->getClientInfo($this->frame->getFd());
         $message = '[' . ($clientInfo['remote_ip'] ?? '') . ':' . ($clientInfo['remote_port'] ?? '') . ']: ' . $data->message;
         return [
