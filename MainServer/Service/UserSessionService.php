@@ -33,7 +33,7 @@ class UserSessionService
 
     public function __init()
     {
-
+        $this->init();
     }
 
     /**
@@ -43,6 +43,7 @@ class UserSessionService
      */
     public function init()
     {
+
         if($fd = RequestContext::get('fd'))
         {
             $memberId = ConnectContext::get('memberId', null, $fd);
@@ -51,15 +52,20 @@ class UserSessionService
         {
             $memberId = false;
         }
+
         if(!$memberId)
         {
-            $memberId = Session::get('memberId');
+
+            $memberId = Session::get('user_id');
+
         }
         if(!$memberId)
         {
+
             return;
         }
-        $this->memberId = $memberId;
+
+        $this->UserId = $memberId;
     }
 
     /**

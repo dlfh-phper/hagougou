@@ -93,7 +93,7 @@ class IndexController extends SingletonHttpController
      */
     public function SendindexMessage(string $data)
     {
-        $this->RedisService->setRedislpush($data);
+        $this->RedisService->setRedislpush('indexbroadcast',$data);
     }
 
     /**
@@ -106,7 +106,7 @@ class IndexController extends SingletonHttpController
     public function getindexMessage()
     {
         return [
-            'data'=>$this->RedisService->getRedislpushMessage()
+            'data'=>$this->RedisService->getRedislpushMessage('indexbroadcast')
         ];
     }
 

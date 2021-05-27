@@ -24,12 +24,12 @@ class RedisService
      * @param $data
      * 设置广播交友队列消息
      */
-    public function setRedislpush($data)
+    public function setRedislpush(string $listname,$data)
     {
-        if($this->redis->lLen('indexbroadcast')>=10){
-            $this->redis->rPop('indexbroadcast');
+        if($this->redis->lLen($listname)>=10){
+            $this->redis->rPop($listname);
         }
-        $this->redis->lpush('indexbroadcast',$data);
+        $this->redis->lpush($listname,$data);
     }
 
     /**
@@ -37,10 +37,10 @@ class RedisService
      * Time: 16:50
      * 获取队列最后两条消息
      */
-    public function getRedislpushMessage()
+    public function getRedislpushMessage(string $listname)
     {
-        $info['msg']=$this->redis->lindex('indexbroadcast',-9);
-        $info['list']=$this->redis->lrange('indexbroadcast',0,-1);
+        $info['msg']=$this->redis->lindex($listname,-9);
+        $info['list']=$this->redis->lrange($listname,0,-1);
         return $info;
     }
 }

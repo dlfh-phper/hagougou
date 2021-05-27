@@ -18,6 +18,7 @@ use Imi\Model\Annotation\Entity;
   `parent_id` int(11) DEFAULT NULL COMMENT '上一条评论id',
   `reply_id` int(11) DEFAULT NULL COMMENT '回复人id',
   `add_time` int(11) NOT NULL COMMENT '评论时间',
+  `w_id` int(11) NOT NULL COMMENT '朋友圈id',
   PRIMARY KEY (`comment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $commentId 
@@ -26,6 +27,7 @@ use Imi\Model\Annotation\Entity;
  * @property int $parentId 上一条评论id
  * @property int $replyId 回复人id
  * @property int $addTime 评论时间
+ * @property int $wId 朋友圈id
  */
 abstract class WechatCommentBase extends Model
 {
@@ -199,6 +201,35 @@ abstract class WechatCommentBase extends Model
     public function setAddTime($addTime)
     {
         $this->addTime = $addTime;
+        return $this;
+    }
+
+    /**
+     * 朋友圈id
+     * w_id
+     * @Column(name="w_id", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $wId;
+
+    /**
+     * 获取 wId - 朋友圈id
+     *
+     * @return int
+     */ 
+    public function getWId()
+    {
+        return $this->wId;
+    }
+
+    /**
+     * 赋值 wId - 朋友圈id
+     * @param int $wId w_id
+     * @return static
+     */ 
+    public function setWId($wId)
+    {
+        $this->wId = $wId;
         return $this;
     }
 
