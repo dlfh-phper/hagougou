@@ -6,6 +6,7 @@ namespace ImiApp\MainServer\HttpController;
 
 use Imi\Controller\SingletonHttpController;
 use Imi\HttpValidate\Annotation\HttpValidation;
+use Imi\JWT\Facade\JWT;
 use Imi\Server\Session\Session;
 use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Text;
@@ -87,8 +88,10 @@ class RoomController extends SingletonHttpController
      */
     public function getRoominfo()
     {
+        $token = JWT::parseToken($this->request->getHeader('Authorization'), 'haihai');
+        $uid = (array)$token->getClaim('data');
         return [
-          'data'=>$this->RoomService->getRoomInfo($this->UserSessionService->getUserId())
+          'data'=>$this->RoomService->getRoomInfo(Session::get('user_id'))
         ];
     }
 
@@ -102,7 +105,7 @@ class RoomController extends SingletonHttpController
     public function getRoomBlacklistInfo()
     {
         return [
-            'data'=>$this->RoomService->getRoomBlacklistInfo($this->UserSessionService->getUserId())
+            'data'=>$this->RoomService->getRoomBlacklistInfo(Session::get('user_id'))
         ];
     }
 }

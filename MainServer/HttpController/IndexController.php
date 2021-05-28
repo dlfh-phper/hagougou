@@ -3,6 +3,7 @@ namespace ImiApp\MainServer\HttpController;
 
 
 use Imi\Controller\SingletonHttpController;
+use Imi\JWT\Facade\JWT;
 use Imi\Server\Route\Annotation\Route;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;

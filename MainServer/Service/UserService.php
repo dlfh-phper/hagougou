@@ -9,6 +9,7 @@ use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Helper\Helper;
 use ImiApp\MainServer\Model\User;
+use \Imi\JWT\Facade\JWT;
 
 /**
  * Class UserService
@@ -27,19 +28,21 @@ class UserService
     public function register(string $phone, string $ip,$data)
     {
         $info=User::newInstance();
-        $info->phone=$phone;
-        $info->ip=$ip;
-        $info->register_time=time();
-        $info->last_time=time();
-        $info->login_time=time();
-        $info->wxopenid=$data['openid'] ?? '';
-        $info->qqopenid=$data['openid'] ?? '';
-        $info->wxhead=$data['head'] ?? '';
-        $info->qqhead=$data['head'] ?? '';
-        $info->wxname=$data['name'] ?? '';
-        $info->qqname=$data['name'] ?? '';
-        $info->save();
-        Session::set('user_id',$info->getUserId());
+        $info->setPhone($phone);
+        $info->setIp($ip);
+        $info->setRegisterTime(time());
+        $info->setLastTime(time());
+        $info->setLoginTime(time());
+        $info->setWxopenid($data['openid'] ?? '');
+        $info->setQqopenid($data['openid'] ?? '');
+        $info->setWxhead($data['head'] ?? '');
+        $info->setQqhead($data['head'] ?? '');
+        $info->setWxname($data['name'] ?? '');
+        $info->setQqname($data['name'] ?? '');
+        $info->insert();
+        Session::set('user_id',$info->getId());
+//        $token = JWT::getToken($info->getId(),'haihai');
+//        return $token->__toString();
     }
 
     /**
@@ -132,6 +135,8 @@ class UserService
                 {
                     $this->setUserInfo($ip,$info->getUserId());
                     Session::set('user_id',$info->getUserId());
+//                    $token = JWT::getToken($info->getUserId(),'haihai');
+//                    return $token->__toString();
                 }else{
                     throw new BusinessException('微信信息错误,请使用正确的微信号码');
                 }

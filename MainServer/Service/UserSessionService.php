@@ -4,11 +4,11 @@
 namespace ImiApp\MainServer\Service;
 
 
+use Imi\Bean\Annotation\Bean;
 use Imi\Aop\Annotation\Inject;
 use Imi\ConnectContext;
 use Imi\RequestContext;
 use Imi\Server\Session\Session;
-use Imi\Bean\Annotation\Bean;
 
 /**
  * Class UserSessionService
@@ -31,7 +31,7 @@ class UserSessionService
      */
     protected $UserInfo;
 
-    public function __init()
+    public function _initialize()
     {
         $this->init();
     }

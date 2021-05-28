@@ -5,6 +5,7 @@ namespace ImiApp\MainServer\HttpController;
 
 
 use Imi\Controller\SingletonHttpController;
+use Imi\JWT\Facade\JWT;
 use Imi\Server\Route\Annotation\Controller;
 use Imi\HttpValidate\Annotation\HttpValidation;
 use Imi\Validate\Annotation\Regex;
@@ -92,6 +93,7 @@ class DynamicController extends SingletonHttpController
      */
     public function setComment(string $content,int $wid,int $parent_id,int $reply_id)
     {
+
         return [
             'data'=>$this->DynamicService->setWechatComment($content,$wid,$parent_id,$reply_id,Session::get('user_id'))
         ];
@@ -151,6 +153,8 @@ class DynamicController extends SingletonHttpController
      */
     public function delete(int $wid)
     {
+//        $token = JWT::parseToken($this->request->getHeader('Authorization'), 'haihai');
+//        $uid = (array)$token->getClaim('data');
         $this->DynamicService->deleteWechat($wid,Session::get('user_id'));
     }
 
@@ -177,5 +181,17 @@ class DynamicController extends SingletonHttpController
         return [
             'data'=>$this->RedisService->getRedislpushMessage('DynamicConfession')
         ];
+    }
+
+    /**
+     * Date: 2021/5/27
+     * Time: 10:01
+     * @Action
+     * @Route(method="POST")
+     */
+    public function getSessionValue()
+    {
+        var_dump($this->UserSessionService->getUserId());
+        var_dump(Session::get('user_id'));
     }
 }

@@ -28,6 +28,9 @@
       <path value="$PROJECT_DIR$/vendor/alibabacloud/endpoint-util" />
       <path value="$PROJECT_DIR$/vendor/alibabacloud/darabonba-openapi" />
       <path value="$PROJECT_DIR$/vendor/aliyuncs/oss-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/yurunsoft/pay-sdk" />
+      <path value="$PROJECT_DIR$/vendor/imiphp/imi-access-control" />
+      <path value="$PROJECT_DIR$/vendor/imiphp/imi-jwt" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1">
