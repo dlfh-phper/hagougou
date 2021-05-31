@@ -11,6 +11,7 @@ use Imi\Server\Route\Annotation\Route;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;
 use Imi\Server\Session\Session;
+use Imi\Server\Http\Message\UploadedFile;
 
 /**
  * Class ApiController
@@ -36,35 +37,12 @@ class ApiController extends SingletonHttpController
      */
     public function upload()
     {
-        $file=$this->request->getUploadedFiles();
-        $this->ApiService->Upload($file['name'],$file['tmp_name']);
-    }
-
-    /**
-     * Date: 2021/5/28
-     * Time: 10:43
-     * @Action
-     * @Route(method="POST")
-     * @return array
-     */
-    public function sethhh($id)
-    {
-        Session::set('id',$id);
-        return [
-            'data'=>Session::getID(),
+        $request = \Imi\RequestContext::get('request')->getUploadedFiles();
+        $file=$request['file'];
+        var_dump($file);
+        return  [
+            'data'=>$this->ApiService->Upload($file->getClientFilename(),$file->getTmpFileName()),
         ];
-    }
 
-    /**
-     * Date: 2021/5/28
-     * Time: 10:55
-     * @Action
-     * @Route(method="POST")
-     */
-    public function getid()
-    {
-        return [
-            'data'=>Session::get('user_id'),
-        ];
     }
 }

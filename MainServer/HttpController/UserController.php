@@ -84,4 +84,18 @@ class UserController extends SingletonHttpController
             'data'=>Session::getID(),
         ];
     }
+
+    /**
+     * Date: 2021/5/28
+     * Time: 13:44
+     * @Action
+     * @Route(method="POST")
+     * @return array
+     */
+    public function getUserinfo()
+    {
+        return [
+          'data' => $this->UserService->getUserInfo(Session::get('user_id')),
+        ];
+    }
 }

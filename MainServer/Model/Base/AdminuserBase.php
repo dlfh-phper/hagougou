@@ -18,6 +18,8 @@ use Imi\Model\Annotation\Entity;
   `jurisdiction` varchar(255) NOT NULL COMMENT '权限',
   `status` int(11) NOT NULL,
   `add_time` int(11) NOT NULL,
+  `login_time` int(11) NOT NULL COMMENT '登陆时间',
+  `ip` varchar(255) NOT NULL COMMENT 'ip地址',
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $adminId 
@@ -26,6 +28,8 @@ use Imi\Model\Annotation\Entity;
  * @property string $jurisdiction 权限
  * @property int $status 
  * @property int $addTime 
+ * @property int $loginTime 登陆时间
+ * @property string $ip ip地址
  */
 abstract class AdminuserBase extends Model
 {
@@ -197,6 +201,64 @@ abstract class AdminuserBase extends Model
     public function setAddTime($addTime)
     {
         $this->addTime = $addTime;
+        return $this;
+    }
+
+    /**
+     * 登陆时间
+     * login_time
+     * @Column(name="login_time", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $loginTime;
+
+    /**
+     * 获取 loginTime - 登陆时间
+     *
+     * @return int
+     */ 
+    public function getLoginTime()
+    {
+        return $this->loginTime;
+    }
+
+    /**
+     * 赋值 loginTime - 登陆时间
+     * @param int $loginTime login_time
+     * @return static
+     */ 
+    public function setLoginTime($loginTime)
+    {
+        $this->loginTime = $loginTime;
+        return $this;
+    }
+
+    /**
+     * ip地址
+     * ip
+     * @Column(name="ip", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $ip;
+
+    /**
+     * 获取 ip - ip地址
+     *
+     * @return string
+     */ 
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
+     * 赋值 ip - ip地址
+     * @param string $ip ip
+     * @return static
+     */ 
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
         return $this;
     }
 
