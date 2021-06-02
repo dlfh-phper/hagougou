@@ -34,6 +34,11 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/yurunsoft/pay-sdk" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/imiphp/imi-access-control" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/imiphp/imi-jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/yurunsoft/yurun-http" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/easyswoole/pay" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/easyswoole/utility" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/easyswoole/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/easyswoole/spl" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

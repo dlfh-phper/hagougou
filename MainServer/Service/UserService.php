@@ -30,6 +30,8 @@ class UserService
     {
         $randid=substr($phone,'3','2').substr($phone,'-1','3');
         $info=User::newInstance();
+        $info->setHead('https://hagougou.oss-cn-shanghai.aliyuncs.com/uplaod/image/20210602/5484f80d6b6a5ce47582760a1e4a08b30fc04fcb.png');
+        $info->setNickname('新手用户'.$randid);
         $info->setPhone($phone);
         $info->setIp($ip);
         $info->setRegisterTime(time());

@@ -7,7 +7,8 @@
         "yurunsoft/pay-sdk": "~3.0",
         "imiphp/imi-access-control": "~1.0",
         "imiphp/imi-jwt": "~1.0",
-        "aliyuncs/oss-sdk-php": "^2.4"
+        "aliyuncs/oss-sdk-php": "^2.4",
+        "yurunsoft/yurun-http": "^4.0.0"
 	},
 
     "autoload": {

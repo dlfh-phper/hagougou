@@ -39,7 +39,6 @@ class ApiController extends SingletonHttpController
     {
         $request = \Imi\RequestContext::get('request')->getUploadedFiles();
         $file=$request['file'];
-        var_dump($file);
         return  [
             'data'=>$this->ApiService->Upload($file->getClientFilename(),$file->getTmpFileName()),
         ];
