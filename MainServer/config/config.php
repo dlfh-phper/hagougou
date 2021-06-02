@@ -67,12 +67,17 @@ return [
         ],
         'HttpSessionMiddleware' =>  [
             'sessionIdHandler'    =>    function(\Imi\Server\Http\Message\Request $request){
-                $sessionId = $request->getHeaderLine('X-Session-Id');
+                $sessionId = $request->getHeaderLine('x-session-id');
+                if(!$sessionId)
+                {
+                    $sessionId = $request->get('_sessionId');
+                }
                 return $sessionId;
             },
         ],
         'WebSocketDispatcher'    =>    [
             'middlewares'    =>    [
+                'ReturnMessageMiddleware',
                 \Imi\Server\WebSocket\Middleware\RouteMiddleware::class,
             ],
         ],
@@ -102,7 +107,7 @@ return [
             'key' => 'LTAI5tP78X7mh6NPHkrfdmnB',
             'Secret' => 'hYgfwMUElpKkc72wP7Q0IuFIYe2O8E',
             'bucket' => 'hagougou',
-            'endpoint' => 'https://oss-cn-shanghai-internal.aliyuncs.com'
+            'endpoint' => 'https://oss-cn-shanghai.aliyuncs.com'
         ]
     ],
 ];

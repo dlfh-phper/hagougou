@@ -99,7 +99,7 @@ class Jurisdiction extends SingletonHttpController
      * Date: 2021/5/31
      * Time: 14:07
      * @Action
-     * @Route(POST)
+     * @Route(metho="POST")
      * @HttpValidation
      * @Required(name="page", default="1")
      * @Required(name="page_size", default="10")

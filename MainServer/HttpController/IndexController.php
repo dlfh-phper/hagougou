@@ -82,7 +82,7 @@ class IndexController extends SingletonHttpController
     public function getIndexRandUser()
     {
         return [
-            'data' =>$this->UserService->getRandUserinfo()
+            'data' =>$this->UserService->getRandUserinfo(2)
         ];
     }
 

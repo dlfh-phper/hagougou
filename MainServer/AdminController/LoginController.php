@@ -41,6 +41,7 @@ class LoginController  extends SingletonHttpController
     public function login(string $account,string $password)
     {
         $ip=$this->request->getServerParam('remote_addr');
+        $this->AdminUserService->adminUserLogin($account,$password,$ip);
         return [
             'data' =>Session::getID(),
         ];

@@ -26,6 +26,8 @@ use Imi\Model\Annotation\Entity;
   `login_time` int(11) NOT NULL COMMENT '登陆时间',
   `ip` varchar(255) NOT NULL COMMENT '登录ip地址',
   `last_time` int(11) NOT NULL COMMENT '上次登录时间',
+  `headkuang` int(11) DEFAULT NULL COMMENT '头像框id',
+  `rand_id` int(11) NOT NULL COMMENT '用户随机id',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $userId 自增id
@@ -42,6 +44,8 @@ use Imi\Model\Annotation\Entity;
  * @property int $loginTime 登陆时间
  * @property string $ip 登录ip地址
  * @property int $lastTime 上次登录时间
+ * @property int $headkuang 头像框id
+ * @property int $randId 用户随机id
  */
 abstract class UserBase extends Model
 {
@@ -448,6 +452,64 @@ abstract class UserBase extends Model
     public function setLastTime($lastTime)
     {
         $this->lastTime = $lastTime;
+        return $this;
+    }
+
+    /**
+     * 头像框id
+     * headkuang
+     * @Column(name="headkuang", type="int", length=11, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $headkuang;
+
+    /**
+     * 获取 headkuang - 头像框id
+     *
+     * @return int
+     */ 
+    public function getHeadkuang()
+    {
+        return $this->headkuang;
+    }
+
+    /**
+     * 赋值 headkuang - 头像框id
+     * @param int $headkuang headkuang
+     * @return static
+     */ 
+    public function setHeadkuang($headkuang)
+    {
+        $this->headkuang = $headkuang;
+        return $this;
+    }
+
+    /**
+     * 用户随机id
+     * rand_id
+     * @Column(name="rand_id", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $randId;
+
+    /**
+     * 获取 randId - 用户随机id
+     *
+     * @return int
+     */ 
+    public function getRandId()
+    {
+        return $this->randId;
+    }
+
+    /**
+     * 赋值 randId - 用户随机id
+     * @param int $randId rand_id
+     * @return static
+     */ 
+    public function setRandId($randId)
+    {
+        $this->randId = $randId;
         return $this;
     }
 

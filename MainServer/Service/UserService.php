@@ -10,6 +10,7 @@ use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Helper\Helper;
 use ImiApp\MainServer\Model\User;
 use \Imi\JWT\Facade\JWT;
+use ImiApp\MainServer\Model\Wechat;
 
 /**
  * Class UserService
@@ -27,6 +28,7 @@ class UserService
      */
     public function register(string $phone, string $ip,$data)
     {
+        $randid=substr($phone,'3','2').substr($phone,'-1','3');
         $info=User::newInstance();
         $info->setPhone($phone);
         $info->setIp($ip);
@@ -39,6 +41,7 @@ class UserService
         $info->setQqhead($data['head'] ?? '');
         $info->setWxname($data['name'] ?? '');
         $info->setQqname($data['name'] ?? '');
+        $info->setRandId($randid);
         $info->insert();
         Session::set('user_id',$info->getId());
 //        $token = JWT::getToken($info->getId(),'haihai');
@@ -180,10 +183,14 @@ class UserService
      * @return \Imi\Db\Query\Interfaces\IQuery
      * 首页推荐用户，随机返回两条
      */
-    public function getRandUserinfo()
+    public function getRandUserinfo(int $num)
     {
         $count=User::count('user_id');
-        $info=User::query()->page(mt_rand(1,$count),2);
+        $info=User::query()->page(mt_rand(1,$count),$num)->select()->getArray();
+        foreach ($info as $key=>$value)
+        {
+            $info[$key]['dynamic']=Wechat::query()->where('uid','=',$value['user_id'])->order('id','desc')->page(0,3)->select()->getArray();
+        }
         return $info;
     }
 
