@@ -12,18 +12,20 @@ use Imi\Model\Annotation\Entity;
  * @Entity
  * @Table(name="officialmsg", id={"id"})
  * @DDL("CREATE TABLE `officialmsg` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`title` varchar(255) NOT NULL COMMENT '标题',
-`content` longblob NOT NULL COMMENT '内容',
-`img` varchar(255) NOT NULL COMMENT '封面图',
-`add_time` int(11) NOT NULL,
-PRIMARY KEY (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL COMMENT '标题',
+  `content` longblob NOT NULL COMMENT '内容',
+  `img` varchar(255) NOT NULL COMMENT '封面图',
+  `add_time` int(11) NOT NULL,
+  `previewcontent` text NOT NULL COMMENT '预览',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
- * @property int $id
+ * @property int $id 
  * @property string $title 标题
  * @property string $content 内容
  * @property string $img 封面图
- * @property int $addTime
+ * @property int $addTime 
+ * @property string $previewcontent 预览
  */
 abstract class OfficialmsgBase extends Model
 {
@@ -38,7 +40,7 @@ abstract class OfficialmsgBase extends Model
      * 获取 id
      *
      * @return int
-     */
+     */ 
     public function getId()
     {
         return $this->id;
@@ -48,7 +50,7 @@ abstract class OfficialmsgBase extends Model
      * 赋值 id
      * @param int $id id
      * @return static
-     */
+     */ 
     public function setId($id)
     {
         $this->id = $id;
@@ -67,7 +69,7 @@ abstract class OfficialmsgBase extends Model
      * 获取 title - 标题
      *
      * @return string
-     */
+     */ 
     public function getTitle()
     {
         return $this->title;
@@ -77,7 +79,7 @@ abstract class OfficialmsgBase extends Model
      * 赋值 title - 标题
      * @param string $title title
      * @return static
-     */
+     */ 
     public function setTitle($title)
     {
         $this->title = $title;
@@ -96,7 +98,7 @@ abstract class OfficialmsgBase extends Model
      * 获取 content - 内容
      *
      * @return string
-     */
+     */ 
     public function getContent()
     {
         return $this->content;
@@ -106,7 +108,7 @@ abstract class OfficialmsgBase extends Model
      * 赋值 content - 内容
      * @param string $content content
      * @return static
-     */
+     */ 
     public function setContent($content)
     {
         $this->content = $content;
@@ -125,7 +127,7 @@ abstract class OfficialmsgBase extends Model
      * 获取 img - 封面图
      *
      * @return string
-     */
+     */ 
     public function getImg()
     {
         return $this->img;
@@ -135,7 +137,7 @@ abstract class OfficialmsgBase extends Model
      * 赋值 img - 封面图
      * @param string $img img
      * @return static
-     */
+     */ 
     public function setImg($img)
     {
         $this->img = $img;
@@ -153,7 +155,7 @@ abstract class OfficialmsgBase extends Model
      * 获取 addTime
      *
      * @return int
-     */
+     */ 
     public function getAddTime()
     {
         return $this->addTime;
@@ -163,10 +165,39 @@ abstract class OfficialmsgBase extends Model
      * 赋值 addTime
      * @param int $addTime add_time
      * @return static
-     */
+     */ 
     public function setAddTime($addTime)
     {
         $this->addTime = $addTime;
+        return $this;
+    }
+
+    /**
+     * 预览
+     * previewcontent
+     * @Column(name="previewcontent", type="text", length=0, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $previewcontent;
+
+    /**
+     * 获取 previewcontent - 预览
+     *
+     * @return string
+     */ 
+    public function getPreviewcontent()
+    {
+        return $this->previewcontent;
+    }
+
+    /**
+     * 赋值 previewcontent - 预览
+     * @param string $previewcontent previewcontent
+     * @return static
+     */ 
+    public function setPreviewcontent($previewcontent)
+    {
+        $this->previewcontent = $previewcontent;
         return $this;
     }
 

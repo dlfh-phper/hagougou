@@ -51,6 +51,10 @@ class Gift extends SingletonHttpController
      * @Action
      * @Route(method="POST")
      * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
+     * @HttpValidation
+     * @Required(name="url", message="礼物不能为空")
+     * @Required(name="price", message="价格不能为空")
+     * @Required(name="type", message="类型不能为空")
      */
     public function setGift(string $url,int $price,int $type)
     {
