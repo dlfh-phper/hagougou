@@ -70,6 +70,7 @@ class Member extends SingletonHttpController
      * Time: 14:45
      * @Action
      * @Route(method="POST")
+     * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
      * @param int $user_id
      * @param int $status
      * @return array
