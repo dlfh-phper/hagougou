@@ -28,6 +28,10 @@ use Imi\Model\Annotation\Entity;
   `last_time` int(11) NOT NULL COMMENT '上次登录时间',
   `headkuang` int(11) DEFAULT NULL COMMENT '头像框id',
   `rand_id` int(11) NOT NULL COMMENT '用户随机id',
+  `wealthvalue` int(11) NOT NULL DEFAULT '0' COMMENT '财富值',
+  `charmvalue` int(11) NOT NULL DEFAULT '0' COMMENT '魅力值',
+  `balance` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $userId 自增id
@@ -46,6 +50,10 @@ use Imi\Model\Annotation\Entity;
  * @property int $lastTime 上次登录时间
  * @property int $headkuang 头像框id
  * @property int $randId 用户随机id
+ * @property int $wealthvalue 财富值
+ * @property int $charmvalue 魅力值
+ * @property int $balance 
+ * @property int $status 
  */
 abstract class UserBase extends Model
 {
@@ -510,6 +518,120 @@ abstract class UserBase extends Model
     public function setRandId($randId)
     {
         $this->randId = $randId;
+        return $this;
+    }
+
+    /**
+     * 财富值
+     * wealthvalue
+     * @Column(name="wealthvalue", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $wealthvalue;
+
+    /**
+     * 获取 wealthvalue - 财富值
+     *
+     * @return int
+     */ 
+    public function getWealthvalue()
+    {
+        return $this->wealthvalue;
+    }
+
+    /**
+     * 赋值 wealthvalue - 财富值
+     * @param int $wealthvalue wealthvalue
+     * @return static
+     */ 
+    public function setWealthvalue($wealthvalue)
+    {
+        $this->wealthvalue = $wealthvalue;
+        return $this;
+    }
+
+    /**
+     * 魅力值
+     * charmvalue
+     * @Column(name="charmvalue", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $charmvalue;
+
+    /**
+     * 获取 charmvalue - 魅力值
+     *
+     * @return int
+     */ 
+    public function getCharmvalue()
+    {
+        return $this->charmvalue;
+    }
+
+    /**
+     * 赋值 charmvalue - 魅力值
+     * @param int $charmvalue charmvalue
+     * @return static
+     */ 
+    public function setCharmvalue($charmvalue)
+    {
+        $this->charmvalue = $charmvalue;
+        return $this;
+    }
+
+    /**
+     * balance
+     * @Column(name="balance", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $balance;
+
+    /**
+     * 获取 balance
+     *
+     * @return int
+     */ 
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * 赋值 balance
+     * @param int $balance balance
+     * @return static
+     */ 
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+        return $this;
+    }
+
+    /**
+     * status
+     * @Column(name="status", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $status;
+
+    /**
+     * 获取 status
+     *
+     * @return int
+     */ 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * 赋值 status
+     * @param int $status status
+     * @return static
+     */ 
+    public function setStatus($status)
+    {
+        $this->status = $status;
         return $this;
     }
 

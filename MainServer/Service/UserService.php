@@ -44,6 +44,7 @@ class UserService
         $info->setWxname($data['name'] ?? '');
         $info->setQqname($data['name'] ?? '');
         $info->setRandId($randid);
+        $info->setStatus(1);
         $info->insert();
         Session::set('user_id',$info->getId());
 //        $token = JWT::getToken($info->getId(),'haihai');
@@ -225,5 +226,36 @@ class UserService
             'list'=>$info,
             'count'=>$count
         ];
+    }
+
+    /**
+     * Date: 2021/6/3
+     * Time: 14:39
+     * @param int $page
+     * @param int $page_size
+     * 用户列表
+     */
+    public function getMemberlist(int $page,int $page_size)
+    {
+        $list=User::query()->page(($page-1)*$page_size,$page_size)->order('user_id','desc')->select()->getArray();
+        $count=User::count();
+        return [
+            'list' => $list,
+            'count' => $count
+        ];
+    }
+
+    /**
+     * Date: 2021/6/3
+     * Time: 14:49
+     * @param int $user_id
+     * @param int $status
+     * 设置用户状态
+     */
+    public function setMemberStatus(int $user_id,int $status)
+    {
+        $info=User::find($user_id);
+        $info->setStatus($status);
+        $info->update();
     }
 }
