@@ -34,10 +34,10 @@ class AdminUserService
                 $record->save();
                 Session::set('adminuser_id',$record->admin_id);
             }else{
-                throw new NotFoundException(sprintf('账户或密码错误, 请查证后在登录 %s'));
+                throw new NotFoundException('账户或密码错误, 请查证后在登录');
             }
         }else{
-            throw new NotFoundException(sprintf('用户不存在 %s'));
+            throw new NotFoundException('用户不存在');
         }
 
     }

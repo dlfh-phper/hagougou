@@ -32,4 +32,9 @@ class GiftService
         $info->setType($type);
         $info->insert();
     }
+    public function deleteGift(int $id)
+    {
+        $idlist=explode(',',$id);
+        Gift::query()->whereIn('id',$idlist)->delete();
+    }
 }

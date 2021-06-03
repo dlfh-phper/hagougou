@@ -56,4 +56,16 @@ class Gift extends SingletonHttpController
     {
         $this->GiftService->setGift($url,$price,$type);
     }
+
+    /**
+     * Date: 2021/6/2
+     * Time: 16:38
+     * @Action
+     * @Route(method="POST")
+     * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
+     */
+    public function deleteGift(int $id)
+    {
+        $this->GiftService->deleteGift($id);
+    }
 }
