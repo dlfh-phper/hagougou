@@ -28,16 +28,20 @@ class AdminUserService
     {
         $record=$this->getByaccount($account);
         if($record){
-            if(password_verify($password,$record->getPassword())){
-                $record->ip=$ip;
-                $record->login_time=time();
-                $record->save();
-                Session::set('adminuser_id',$record->admin_id);
+            if($record->getStatus()==1){
+                if(password_verify($password,$record->getPassword())){
+                    $record->ip=$ip;
+                    $record->login_time=time();
+                    $record->save();
+                    Session::set('adminuser_id',$record->admin_id);
+                }else{
+                    throw new BusinessException('账户或密码错误, 请查证后在登录');
+                }
             }else{
-                throw new NotFoundException('账户或密码错误, 请查证后在登录');
+                throw new BusinessException("账户异常请联系管理员");
             }
         }else{
-            throw new NotFoundException('用户不存在');
+            throw new BusinessException('用户不存在');
         }
 
     }
@@ -80,5 +84,24 @@ class AdminUserService
         $result->setAddTime(time());
         $result->setStatus(1);
         $result->insert();
+    }
+
+    /**
+     * Date: 2021/6/3
+     * Time: 10:51
+     * @param int $admin_id
+     * @param int $status
+     * @throws BusinessException
+     * 设置管理员状态
+     */
+    public function setAdminUserStatus(int $admin_id,int $status)
+    {
+        $info=Adminuser::find($admin_id);
+        if($info){
+            $info->setStatus($status);
+            $info->update();
+        }else{
+            throw new BusinessException('ID为'.$admin_id.'的管理员不存在');
+        }
     }
 }

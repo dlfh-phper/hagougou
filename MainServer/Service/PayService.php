@@ -2,6 +2,9 @@
 
 
 namespace ImiApp\MainServer\Service;
+use EasySwoole\Pay\WeChat\Config;
+use EasySwoole\Pay\WeChat\WeChatPay\OfficialAccount;
+use EasySwoole\Spl\SplBean;
 use Imi\RequestContext;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Model\Paylog;
@@ -33,13 +36,7 @@ class PayService
     }
     public function wxpay(string $openid)
     {
-        $out_trade_no=uniqid().rand(1000,9999);
-        $info=Paylog::newInstance();
-        $info->setAddTime(time());
-        $info->setOpenid($openid);
-        $info->setStatus(1);
-        $info->setOutTradeNo($out_trade_no);
-        $info->insert();
+
         $callbackurl='https://api.haihaixingqiu.com/pay/wxcallbacku';
         $pay = new \Yurun\PaySDK\Weixin\SDK($this->params);
         $request = new \Yurun\PaySDK\Weixin\APP\Params\Pay\Request;
@@ -60,7 +57,37 @@ class PayService
             throw new BusinessException($pay->getErrorCode() . ':' . $pay->getError());
         }
     }
+    public function easywxpay(string $openid)
+    {
+        try{
+            $out_trade_no=uniqid().rand(1000,9999);
+            $info=Paylog::newInstance();
+            $info->setAddTime(time());
+            $info->setOpenid($openid);
+            $info->setStatus(1);
+            $info->setOutTradeNo($out_trade_no);
+            $info->insert();
+            $wechatConfig = new Config();
+            $wechatConfig->setAppId('xxxxxx');      // 除了小程序以外使用该APPID
+            $wechatConfig->setMiniAppId('xxxxxx');  // 小程序使用该APPID
+            $wechatConfig->setMchId('xxxxxx');
+            $wechatConfig->setKey('xxxxxx');
+            $wechatConfig->setNotifyUrl('xxxxx');
+            $wechatConfig->setApiClientCert('xxxxxxx');//客户端证书
+            $wechatConfig->setApiClientKey('xxxxxxx'); //客户端证书秘钥
+            $officialAccount = new \EasySwoole\Pay\WeChat\RequestBean\OfficialAccount();
+            $officialAccount->setOpenid('xxxxxxx');
+            $officialAccount->setOutTradeNo($out_trade_no);
+            $officialAccount->setBody('微信支付');
+            $officialAccount->setTotalFee(1);
+            $officialAccount->setSpbillCreateIp('139.196.231.67');
+            $pay = new \EasySwoole\Pay\Pay();
+            $params = $pay->weChat($wechatConfig)->officialAccount($officialAccount);
+        }catch (BusinessException $bu){
+            throw new BusinessException($bu->getMessage());
+        }
 
+    }
     public function send()
     {
         $sdk = new \Yurun\PaySDK\Weixin\SDK($this->params);

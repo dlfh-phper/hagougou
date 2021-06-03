@@ -55,6 +55,7 @@ class JurisdictionService
             $info->setNodeName($name);
             $info->setMoudleId($moudle_id);
             $info->setAddTime(time());
+            $info->insert();
         }
     }
 
@@ -95,10 +96,10 @@ class JurisdictionService
      */
     public function getJurisdictionList(int $page,int $page_size)
     {
-        $list=Moudle::query()->page(($page-1)*$page_size,$page_size)->select()->getArray();
+        $list=Moudle::dbQuery()->page(($page-1)*$page_size,$page_size)->select()->getArray();
         foreach ($list as $key=>$value)
         {
-            $list[$key]=Node::query()->where('moudle_id',$value['id'])->select()->getArray();
+            $list[$key]['node']=Node::query()->where('moudle_id','=',$value['id'])->select()->getArray();
         }
         $count=Moudle::count('id');
         return [

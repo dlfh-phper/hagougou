@@ -72,6 +72,17 @@ class LoginController  extends SingletonHttpController
     }
 
     /**
+     * Date: 2021/6/3
+     * Time: 10:47
+     * @Action
+     * @Route(method="POST")
+     * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
+     */
+    public function setAdminUserStatus(int $admin_id,int $status)
+    {
+        $this->AdminUserService->setAdminUserStatus($admin_id,$status);
+    }
+    /**
      * Date: 2021/5/31
      * Time: 14:00
      * @Action
