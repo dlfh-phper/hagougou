@@ -48,7 +48,7 @@ class IndexController extends SingletonHttpController
     public function banner(string $position)
     {
         $info=$this->BannerService->getBanner($position);
-//        $info=$position ?? '6';
+//        $info=getcwd();
         return [
             'data'=>$info
         ];

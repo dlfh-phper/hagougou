@@ -49,7 +49,6 @@ class IndexController extends WebSocketController
      */
     public function WorldChat($data)
     {
-        var_dump($data);
 
         $this->server->joinGroup('WorldChat', $this->frame->getFd());
         $this->RedisService->setRedislpush('indexbroadcast',$data);

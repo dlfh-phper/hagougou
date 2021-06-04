@@ -50,4 +50,38 @@ class Officialmsg extends SingletonHttpController
     {
         $this->OfficialmsgService->setMsg($title,$content,$img,$previewcontent,$id);
     }
+
+    /**
+     * Date: 2021/6/4
+     * Time: 9:58
+     * @Action
+     * @Route(method="POST")
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public function getMsgList(int $page,int $page_size)
+    {
+        return [
+            'data' => $this->OfficialmsgService->getMsgList($page,$page_size),
+        ];
+    }
+
+    /***
+     * Date: 2021/6/4
+     * Time: 10:10
+     * @Action
+     * @Route(method="POST")
+     * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
+     * @HttpValidation
+     * @Required(name="id", message="ID不能为空")
+     * @param int $id
+     * @return array
+     */
+    public function getMsgInfo(int $id)
+    {
+        return [
+            'data' => $this->OfficialmsgService->getMsgInfo($id)
+        ];
+    }
 }

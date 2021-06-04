@@ -137,14 +137,16 @@ class DynamicService
      * Time: 11:21
      * @param int $wid
      * @return mixed
-     * 获取点赞人的头像
+     *
      */
     public function spotzanniCkname(int $wid)
     {
         $info=Spotzan::query()->where('w_id','=',$wid)->select()->getArray();
         foreach ($info as $key=>$value){
             $user=User::find($value['uid']);
+            //获取点赞人的昵称
             $info[$key]['nickname']=$user['nickname'] ?? $user['wxname'] ?? $user['qqname'];
+
         }
         return $info['nickname'];
     }

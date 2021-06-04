@@ -5,6 +5,7 @@ namespace ImiApp\MainServer\HttpController;
 
 
 use Imi\Controller\SingletonHttpController;
+use Imi\Db\Db;
 use Imi\RequestContext;
 use Imi\Server\Route\Annotation\Route;
 use Imi\Server\Route\Annotation\Action;
@@ -20,7 +21,7 @@ use Imi\Config;
 /**
  * Class PayController
  * @package ImiApp\MainServer\HttpController
- * @Controller("pay");
+ * @Controller("/pay/");
  */
 class PayController extends SingletonHttpController
 {
@@ -40,7 +41,7 @@ class PayController extends SingletonHttpController
     public function wxpay(string $openid)
     {
         return [
-          'data' =>$this->PayService->wxpay($openid),
+          'data' =>$this->PayService->easywxpay($openid),
         ];
     }
 
@@ -52,24 +53,35 @@ class PayController extends SingletonHttpController
      */
     public function wxcallbacku()
     {
-        $sdk = new \Yurun\PaySDK\Weixin\SDK($this->params);
-        $payNotify = new class extends \Yurun\PaySDK\Weixin\Notify\Pay {
-            /**
-             * 后续执行操作
-             * @return void
-             */
-            protected function __exec()
-            {
-                var_export($this->data);
-            }
-        };
-        $context = RequestContext::getContext();
-        // 下面两行很关键
-        $payNotify->swooleRequest = $context['request'];
-        $payNotify->swooleResponse = $context['response'];
-        $sdk->notify($payNotify);
+        $content=$this->request->getBody();
+        $jsonxml = json_encode(simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA));
+        $params = json_decode($jsonxml, true);
+        if($params['return_code'] == 'SUCCESS' && $params['result_code'] == 'SUCCESS'){
+            $data['status']=2;
+            $data['complete_time']=time();
+            $data['trade_no']=$params['transaction_id'];
+            Db::query()->table('paylog')->where('out_trade_no','=',$params['out_trade_no'])->update($data);
+            \EasySwoole\Pay\WeChat\WeChat::success();
+        }else{
+            \EasySwoole\Pay\WeChat\WeChat::fail();
+        }
+    }
 
-        // 这句话必须填写
-        return $payNotify->swooleResponse;
+    /**
+     * Date: 2021/6/4
+     * Time: 11:22
+     * @Action
+     * @Route(method="POST")
+     * @param $code
+     * @return array
+     */
+    public function getOpenid($code)
+    {
+        $token="https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1b69b2af6dbd0f33&secret=af9c9d73077a3663af700629b20b54fa&code={$code}&grant_type=authorization_code";
+        $token=file_get_contents($token);
+        $token=json_decode($token,true);
+        return [
+            'data' =>  $token,
+        ];
     }
 }
