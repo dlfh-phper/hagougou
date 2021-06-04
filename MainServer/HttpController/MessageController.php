@@ -27,7 +27,11 @@ class MessageController extends SingletonHttpController
      * @Inject("OfficialmsgService");
      */
     protected $OfficialmsgService;
-
+    /**
+     * @var
+     * @Inject("DynamicService")
+     */
+    protected $DynamicService;
     /**
      * Date: 2021/6/4
      * Time: 15:06
@@ -67,9 +71,35 @@ class MessageController extends SingletonHttpController
      * Time: 15:24
      * @Action
      * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="page", default="1")
+     * @Required(name="page_size", default="10")
+     * 点赞动态消息
      */
     public function getDynamicMsg(int $page,int $page_size)
     {
+        return [
+            'data' => $this->DynamicService->getSpotzanDynamic($page,$page_size,Session::get('user_id'))
+        ];
+    }
 
+    /**
+     * Date: 2021/6/4
+     * Time: 16:41
+     * @Action
+     * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="page", default="1")
+     * @Required(name="page_size", default="10")
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     * 评论动态消息
+     */
+    public function getCommentDynamic(int $page,int $page_size)
+    {
+        return [
+            'data' => $this->DynamicService->getCommentDynamic($page,$page_size,Session::get('user_id'))
+        ];
     }
 }

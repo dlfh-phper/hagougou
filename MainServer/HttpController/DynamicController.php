@@ -145,6 +145,24 @@ class DynamicController extends SingletonHttpController
     }
 
     /**
+     * Date: 2021/6/4
+     * Time: 16:09
+     * @Action
+     * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="page", default="1")
+     * @Required(name="page_size", default="10")
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public function getUserWechatList(int $page,int $page_size)
+    {
+        return [
+            'data' =>$this->DynamicService->getUserWechatList($page,$page_size,Session::get('user_id'))
+        ];
+    }
+    /**
      * Date: 2021/5/25
      * Time: 15:05
      * @Action

@@ -16,12 +16,14 @@ use Imi\Model\Annotation\Entity;
   `w_id` int(11) NOT NULL COMMENT '朋友圈id',
   `uid` int(11) NOT NULL COMMENT '点赞人id',
   `add_time` int(11) NOT NULL COMMENT '时间',
+  `have_id` int(11) NOT NULL COMMENT '动态发布者的id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $id 
  * @property int $wId 朋友圈id
  * @property int $uid 点赞人id
  * @property int $addTime 时间
+ * @property int $haveId 动态发布者的id
  */
 abstract class SpotzanBase extends Model
 {
@@ -137,6 +139,35 @@ abstract class SpotzanBase extends Model
     public function setAddTime($addTime)
     {
         $this->addTime = $addTime;
+        return $this;
+    }
+
+    /**
+     * 动态发布者的id
+     * have_id
+     * @Column(name="have_id", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $haveId;
+
+    /**
+     * 获取 haveId - 动态发布者的id
+     *
+     * @return int
+     */ 
+    public function getHaveId()
+    {
+        return $this->haveId;
+    }
+
+    /**
+     * 赋值 haveId - 动态发布者的id
+     * @param int $haveId have_id
+     * @return static
+     */ 
+    public function setHaveId($haveId)
+    {
+        $this->haveId = $haveId;
         return $this;
     }
 
