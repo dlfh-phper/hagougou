@@ -282,4 +282,20 @@ class DynamicService
             'count' => $count
         ];
     }
+
+    /**
+     * Date: 2021/6/7
+     * Time: 14:59
+     * @param string $label
+     * @return array
+     */
+    public function getLabelSearch(int $page,int $page_size,string $label)
+    {
+        $list=Wechat::query()->whereRaw("label->'$.label'='{$label}'")->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
+        $count=Wechat::query()->whereRaw("label->'$.label'='{$label}'")->count('id');
+        return [
+            'list'=>$list,
+            'count'=>$count
+        ];
+    }
 }

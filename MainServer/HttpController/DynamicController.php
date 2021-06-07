@@ -202,6 +202,22 @@ class DynamicController extends SingletonHttpController
     }
 
     /**
+     * Date: 2021/6/7
+     * Time: 15:01
+     * @Action
+     * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="page", default="1")
+     * @Required(name="page_size", default="10")
+     * @return array
+     */
+    public function getLabelSearch(int $page,int $page_size,string $label)
+    {
+        return [
+            'data' => $this->DynamicService->getLabelSearch($page,$page_size,$label)
+        ];
+    }
+    /**
      * Date: 2021/5/27
      * Time: 10:01
      * @Action
