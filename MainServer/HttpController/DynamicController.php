@@ -50,10 +50,10 @@ class DynamicController extends SingletonHttpController
      * @param string $url
      * 发布动态，文字最多700个，图片最多九张
      */
-    public function setSquareDynamic(string $text,string $url)
+    public function setSquareDynamic(string $text,string $url,string $label)
     {
         return [
-            'data' => $this->DynamicService->setWechat($text,$url,Session::get('user_id'))
+            'data' => $this->DynamicService->setWechat($text,$url,$label,Session::get('user_id'))
         ];
     }
 

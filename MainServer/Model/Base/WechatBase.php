@@ -19,6 +19,7 @@ use Imi\Model\Annotation\Entity;
   `comment` int(11) NOT NULL COMMENT '评论数量',
   `add_time` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
+  `label` varchar(255) NOT NULL COMMENT '标签',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
@@ -29,6 +30,7 @@ use Imi\Model\Annotation\Entity;
  * @property int $comment 评论数量
  * @property int $addTime 
  * @property int $uid 
+ * @property string $label 标签
  */
 abstract class WechatBase extends Model
 {
@@ -229,6 +231,35 @@ abstract class WechatBase extends Model
     public function setUid($uid)
     {
         $this->uid = $uid;
+        return $this;
+    }
+
+    /**
+     * 标签
+     * label
+     * @Column(name="label", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $label;
+
+    /**
+     * 获取 label - 标签
+     *
+     * @return string
+     */ 
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * 赋值 label - 标签
+     * @param string $label label
+     * @return static
+     */ 
+    public function setLabel($label)
+    {
+        $this->label = $label;
         return $this;
     }
 

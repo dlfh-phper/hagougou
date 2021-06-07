@@ -31,12 +31,13 @@ class DynamicService
      * @param string $url
      * 发布动态
      */
-    public function setWechat(string $text,string $url,int $uid)
+    public function setWechat(string $text,string $url,string $label,int $uid)
     {
         $info=Wechat::newInstance();
         $info->setText($text);
         $info->setUrl($url);
         $info->setUid($uid);
+        $info->setLabel($label);
         $info->setFabulous(0);
         $info->setComment(0);
         $info->setAddTime(time());
