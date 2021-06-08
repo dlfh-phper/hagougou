@@ -89,7 +89,7 @@ abstract class UserBase extends Model
     /**
      * 注册手机号
      * phone
-     * @Column(name="phone", type="char", length=30, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="phone", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var string
      */
     protected $phone;

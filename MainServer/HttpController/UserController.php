@@ -58,7 +58,7 @@ class UserController extends SingletonHttpController
      * @param array $data
      * @param string $phone
      */
-    public function wxlogin(array $wxdata,string $phone)
+    public function wxlogin(string $wxdata,string $phone)
     {
         $ip = $this->request->getServerParam('remote_addr');
         $this->UserService->wxlogin($phone,$ip,$wxdata);
@@ -76,7 +76,7 @@ class UserController extends SingletonHttpController
      * @param string $phone
      * @return array
      */
-    public function Qqlogin(array $qqdata,string $phone)
+    public function Qqlogin(string $qqdata,string $phone)
     {
         $ip = $this->request->getServerParam('remote_addr');
         $this->UserService->qqlogin($phone,$ip,$qqdata);
