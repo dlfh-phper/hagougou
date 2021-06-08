@@ -235,7 +235,7 @@ class UserService
      * @param int $page_size
      * 用户列表
      */
-    public function getMemberlist(int $page,int $page_size)
+    public function getMemberlist(int $page,int $page_size,string $field)
     {
         $list=User::query()->page(($page-1)*$page_size,$page_size)->order('user_id','desc')->select()->getArray();
         $count=User::count();

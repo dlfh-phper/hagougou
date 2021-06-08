@@ -39,6 +39,11 @@ class DynamicController extends SingletonHttpController
      */
     protected $RedisService;
     /**
+     * @var
+     * @Inject("TopicService")
+     */
+    protected $TopicService;
+    /**
      * Date: 2021/5/24
      * Time: 16:42
      * @Action
@@ -215,6 +220,19 @@ class DynamicController extends SingletonHttpController
     {
         return [
             'data' => $this->DynamicService->getLabelSearch($page,$page_size,$label)
+        ];
+    }
+
+    /**
+     * Date: 2021/6/7
+     * Time: 15:34
+     * @Action
+     * @Route(method="POST")
+     */
+    public function getTopiclist()
+    {
+        return [
+          'data' => $this->TopicService->getTopiclist(1,10)
         ];
     }
     /**

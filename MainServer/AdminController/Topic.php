@@ -18,21 +18,35 @@ use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Required;
 
 /**
- * Class Member
+ * Class Topic
  * @package ImiApp\MainServer\AdminController
- * @Controller("/Member/")
+ * @Controller("/Topic/")
  */
-class Member extends SingletonHttpController
+class Topic extends SingletonHttpController
 {
-    /**
-     * @var
-     * @Inject("UserService");
-     */
-    protected $UserService;
 
     /**
-     * Date: 2021/6/3
-     * Time: 14:37
+     * @var
+     * @Inject("TopicService")
+     */
+    protected $TopicService;
+    /**
+     * Date: 2021/6/7
+     * Time: 15:15
+     * @Action
+     * @Route(method="POST")
+     * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
+     */
+    public function setTopic(string $label,string $url,int $id)
+    {
+        return [
+          'data' => $this->TopicService->setTopic($label,$url,$id),
+        ];
+    }
+
+    /**
+     * Date: 2021/6/7
+     * Time: 15:28
      * @Action
      * @Route(method="POST")
      * @HttpValidation
@@ -42,44 +56,26 @@ class Member extends SingletonHttpController
      * @param int $page_size
      * @return array
      */
-    public function getMemberlist(int $page,int $page_size)
+    public function getTopiclist(int $page,int $page_size)
     {
         return [
-            'data' => $this->UserService->getMemberlist($page,$page_size,'user_id'),
+            'data' => $this->TopicService->getTopiclist($page,$page_size),
         ];
     }
 
     /**
-     * Date: 2021/6/3
-     * Time: 14:43
-     * @Action
-     * @Route(method="POST")
-     * @param int $user_id
-     * @return array
-     * 用户详情
-     */
-    public function getMemberInfo(int $user_id)
-    {
-        return [
-          'data' => $this->UserService->getUserInfo($user_id)
-        ];
-    }
-
-    /**
-     * Date: 2021/6/3
-     * Time: 14:45
+     * Date: 2021/6/7
+     * Time: 15:30
      * @Action
      * @Route(method="POST")
      * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
-     * @param int $user_id
-     * @param int $status
+     * @param string $id
      * @return array
-     * 设置用户状态
      */
-    public function setMemberStatus(int $user_id,int $status)
+    public function deleteTopic(string $id)
     {
         return [
-            'data' => $this->UserService->setMemberStatus($user_id,$status)
+            'data' => $this->TopicService->deleteTopic($id),
         ];
     }
 }

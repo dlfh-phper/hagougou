@@ -56,6 +56,9 @@ class Officialmsg extends SingletonHttpController
      * Time: 9:58
      * @Action
      * @Route(method="POST")
+     * @HttpValidation
+     * @Required(name="page", default="1")
+     * @Required(name="page_size", default="10")
      * @param int $page
      * @param int $page_size
      * @return array
