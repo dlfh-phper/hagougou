@@ -5,6 +5,7 @@ namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
 use Imi\Server\Session\Session;
+use ImiApp\Enum\MessageCode;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Helper\Helper;
@@ -38,11 +39,11 @@ class UserService
         $info->setLastTime(time());
         $info->setLoginTime(time());
         $info->setWxopenid($data['openId'] ?? '');
-        $info->setQqopenid($data['openid'] ?? '');
+        $info->setQqopenid($data['qqopenid'] ?? '');
         $info->setWxhead($data['avatarUrl'] ?? '');
-        $info->setQqhead($data['head'] ?? '');
+        $info->setQqhead($data['qqhead'] ?? '');
         $info->setWxname($data['nickName'] ?? '');
-        $info->setQqname($data['name'] ?? '');
+        $info->setQqname($data['qqname'] ?? '');
         $info->setRandId($randid);
         $info->setStatus(1);
         $info->insert();
@@ -89,12 +90,12 @@ class UserService
     {
         $wxdata = json_decode($wxdata, true);
         $info = $this->getByOpenid('wxopenid', $wxdata['openId']);
-        if ($info) {
+        if (!$info->getPhone()=='') {
             Session::set('user_id', $info->getUserId());
         } else {
             //手机号等于空不允许注册
             if ($phone == '') {
-                return false;
+                throw new BusinessException('false',MessageCode::SUCCESS);
             } else {
                 //先判判断手一家伙存不存在数据库里面，存在设置一下微信头像
                 $member = $this->getByPhone($phone);
@@ -125,14 +126,13 @@ class UserService
     public function qqlogin(string $phone, string $ip, string $qqdata)
     {
 
-        var_dump($qqdata);
         $qqdata = json_decode($qqdata, true);
         $info = $this->getByOpenid('qqopenid', $qqdata['openId']);
-        if ($info) {
+        if (!$info->getPhone()=='') {
             Session::set('user_id', $info->getUserId());
         } else {
             if ($phone == '') {
-                return false;
+                throw new BusinessException('false',MessageCode::SUCCESS);
             } else {
                 $member = $this->getByPhone($phone);
                 if ($member) {
@@ -142,7 +142,10 @@ class UserService
                     $member->update();
                     Session::set('user_id', $member->getUserId());
                 } else {
-                    $this->register($phone, $ip, $qqdata);
+                    $data['qqhead']=$qqdata['avatarUrl'];
+                    $data['qqname']=$qqdata['nickName'];
+                    $data['qqopenid']=$qqdata['openId'];
+                    $this->register($phone, $ip, $data);
                 }
             }
         }

@@ -64,17 +64,10 @@ class UserController extends SingletonHttpController
     public function wxlogin(string $wxdata, string $phone)
     {
         $ip = $this->request->getServerParam('remote_addr');
-        $value = $this->UserService->wxlogin($phone, $ip, $wxdata);
-        if ($value == false) {
-            return [
-                'data' => false,
-            ];
-        } else {
-            return [
-                'data' => Session::getID(),
-            ];
-        }
-
+        $this->UserService->wxlogin($phone, $ip, $wxdata);
+        return [
+            'data' => Session::getID(),
+        ];
     }
 
     /**
@@ -89,16 +82,10 @@ class UserController extends SingletonHttpController
     public function Qqlogin(string $qqdata, string $phone)
     {
         $ip = $this->request->getServerParam('remote_addr');
-        $value = $this->UserService->qqlogin($phone, $ip, $qqdata);
-        if ($value == false) {
-            return [
-                'data' => false,
-            ];
-        } else {
-            return [
-                'data' => Session::getID(),
-            ];
-        }
+        $this->UserService->qqlogin($phone, $ip, $qqdata);
+        return [
+            'data' => Session::getID(),
+        ];
     }
 
     /**
