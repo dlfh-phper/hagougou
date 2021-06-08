@@ -44,4 +44,19 @@ class ApiController extends SingletonHttpController
         ];
 
     }
+
+    /**
+     * Date: 2021/6/8
+     * Time: 15:12
+     * @Action
+     * @Route(method="POST")
+     * @param string $phone
+     * @return array
+     */
+    public function Sms(string $phone)
+    {
+        return [
+            'data' => $this->ApiService->sendSms($phone,'2'),
+        ];
+    }
 }

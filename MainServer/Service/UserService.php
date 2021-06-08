@@ -124,6 +124,8 @@ class UserService
      */
     public function qqlogin(string $phone, string $ip, string $qqdata)
     {
+
+        var_dump($qqdata);
         $qqdata = json_decode($qqdata, true);
         $info = $this->getByOpenid('qqopenid', $qqdata['openId']);
         if ($info) {

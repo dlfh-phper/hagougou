@@ -14,6 +14,7 @@ use Imi\Validate\Annotation\Integer;
 use Imi\Validate\Annotation\Required;
 use Imi\Validate\Annotation\Regex;
 use Imi\Aop\Annotation\Inject;
+
 /**
  * @Controller("/User/")
  */
@@ -25,6 +26,7 @@ class UserController extends SingletonHttpController
      * @var ImiApp\MainServer\Service\UserService;
      */
     protected $UserService;
+
     /**
      * Date: 2021/5/18
      * Time: 11:10
@@ -37,13 +39,14 @@ class UserController extends SingletonHttpController
      * @Integer(name="code", min="1", message="验证码不能为负")
      * @return void
      */
-    public function login(string $phone,string $code)
+    public function login(string $phone, string $code)
     {
         $ip = $this->request->getServerParam('remote_addr');
-        $this->UserService->login($phone,$ip,$code);
+        $this->UserService->login($phone, $ip, $code);
+
 //        $this->UserService->login($phone,$ip,$code)
         return [
-            'data'=> Session::getID(),
+            'data' => Session::getID(),
         ];
     }
 
@@ -58,13 +61,20 @@ class UserController extends SingletonHttpController
      * @param array $data
      * @param string $phone
      */
-    public function wxlogin(string $wxdata,string $phone)
+    public function wxlogin(string $wxdata, string $phone)
     {
         $ip = $this->request->getServerParam('remote_addr');
-        $this->UserService->wxlogin($phone,$ip,$wxdata);
-        return [
-            'data'=>Session::getID(),
-        ];
+        $value = $this->UserService->wxlogin($phone, $ip, $wxdata);
+        if ($value == false) {
+            return [
+                'data' => false,
+            ];
+        } else {
+            return [
+                'data' => Session::getID(),
+            ];
+        }
+
     }
 
     /**
@@ -76,13 +86,19 @@ class UserController extends SingletonHttpController
      * @param string $phone
      * @return array
      */
-    public function Qqlogin(string $qqdata,string $phone)
+    public function Qqlogin(string $qqdata, string $phone)
     {
         $ip = $this->request->getServerParam('remote_addr');
-        $this->UserService->qqlogin($phone,$ip,$qqdata);
-        return [
-            'data'=>Session::getID(),
-        ];
+        $value = $this->UserService->qqlogin($phone, $ip, $qqdata);
+        if ($value == false) {
+            return [
+                'data' => false,
+            ];
+        } else {
+            return [
+                'data' => Session::getID(),
+            ];
+        }
     }
 
     /**
@@ -95,7 +111,7 @@ class UserController extends SingletonHttpController
     public function getUserinfo()
     {
         return [
-          'data' => $this->UserService->getUserInfo(Session::get('user_id')),
+            'data' => $this->UserService->getUserInfo(Session::get('user_id')),
         ];
     }
 }
