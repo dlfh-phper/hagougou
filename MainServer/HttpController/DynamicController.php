@@ -142,10 +142,10 @@ class DynamicController extends SingletonHttpController
      * @Required(name="page", default="1")
      * @Required(name="page_size", default="10")
      */
-    public function getWechatList(int $page,int $page_size)
+    public function getWechatList(int $page,int $page_size,string $field)
     {
         return [
-            'data' =>$this->DynamicService->getWechatList($page,$page_size)
+            'data' =>$this->DynamicService->getWechatList($page,$page_size,$field)
         ];
     }
 

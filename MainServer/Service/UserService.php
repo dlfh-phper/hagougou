@@ -46,6 +46,9 @@ class UserService
         $info->setQqname($data['qqname'] ?? '');
         $info->setRandId($randid);
         $info->setStatus(1);
+        $info->setSex('3');
+        $info->setBirthday('1997-10-26');
+        $info->setRegion('江苏无锡');
         $info->insert();
     }
 
@@ -95,7 +98,7 @@ class UserService
         } else {
             //手机号等于空不允许注册
             if ($phone == '') {
-                throw new BusinessException('false',MessageCode::SUCCESS);   
+                throw new BusinessException('false',MessageCode::SUCCESS);
             } else {
                 //先判判断手一家伙存不存在数据库里面，存在设置一下微信头像
                 $member = $this->getByPhone($phone);

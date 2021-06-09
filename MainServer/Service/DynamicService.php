@@ -185,9 +185,9 @@ class DynamicService
      * @return array
      * 广场动态列表
      */
-    public function getWechatList(int $page,int $page_size)
+    public function getWechatList(int $page,int $page_size,string $field)
     {
-        $list=Wechat::query()->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
+        $list=Wechat::query()->page(($page-1)*$page_size,$page_size)->order($field,'desc')->select()->getArray();
         foreach ($list as $key=>$value)
         {
             $list[$key]=$this->getWechatinfo($value['id']);
