@@ -235,6 +235,23 @@ class DynamicController extends SingletonHttpController
           'data' => $this->TopicService->getTopiclist(1,10)
         ];
     }
+
+    /**
+     * Date: 2021/6/9
+     * Time: 16:28
+     * @Action
+     * @Route(method="POST")
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     * 关注动态
+     */
+    public function getFlollowWechat(int $page,int $page_size)
+    {
+        return [
+            'data' => $this->DynamicService->getFlollowWechat($page,$page_size,Session::get('user_id'))
+        ];
+    }
     /**
      * Date: 2021/5/27
      * Time: 10:01

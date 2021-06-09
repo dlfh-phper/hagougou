@@ -4,6 +4,7 @@
 namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
+use ImiApp\MainServer\Model\Follow;
 use ImiApp\MainServer\Model\Spotzan;
 use ImiApp\MainServer\Model\User;
 use ImiApp\MainServer\Model\Wechat;
@@ -293,6 +294,29 @@ class DynamicService
     {
         $list=Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
         $count=Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->count('id');
+        return [
+            'list'=>$list,
+            'count'=>$count
+        ];
+    }
+
+    /**
+     * Date: 2021/6/9
+     * Time: 16:34
+     * @param int $page
+     * @param int $page_size
+     * @param int $uid
+     * @return array
+     * 获取被关注的动态
+     */
+    public function getFlollowWechat(int $page,int $page_size,int $uid)
+    {
+        //获取被关注人的id
+        $flollowarr=Follow::dbQuery()->where('uid','=',$uid)->select()->getArray();
+        //转为一维数组
+        $flollowarr=array_column($flollowarr,'follow_id');
+        $list=Wechat::query()->whereIn('uid',$flollowarr)->order('id','desc')->select()->getArray();
+        $count=Wechat::query()->whereIn('uid',$flollowarr)->select()->getRowCount();
         return [
             'list'=>$list,
             'count'=>$count
