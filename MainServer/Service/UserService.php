@@ -9,6 +9,7 @@ use ImiApp\Enum\MessageCode;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Helper\Helper;
+use ImiApp\MainServer\Model\Follow;
 use ImiApp\MainServer\Model\User;
 use \Imi\JWT\Facade\JWT;
 use ImiApp\MainServer\Model\Wechat;
@@ -68,7 +69,7 @@ class UserService
             //账号存在就验证验证码，正确登录更新登陆时间，上次登录时间。登录IP地址
             if (Helper::VerificationCode($code) == true) {
                 //登录之后修改用户登陆时间，上次登录时间，IP地址
-                $this->setUserInfo($ip, $info->getUserId());
+                $this->setUserLoginInfo($ip, $info->getUserId());
                 Session::set('user_id', $info->getUserId());
             } else {
                 throw new BusinessException('验证码错误');
@@ -94,6 +95,7 @@ class UserService
         $wxdata = json_decode($wxdata, true);
         $info = $this->getByOpenid('wxopenid', $wxdata['openId']);
         if ($info) {
+            $this->setUserLoginInfo($ip, $info->getUserId());
             Session::set('user_id', $info->getUserId());
         } else {
             //手机号等于空不允许注册
@@ -132,6 +134,7 @@ class UserService
         $qqdata = json_decode($qqdata, true);
         $info = $this->getByOpenid('qqopenid', $qqdata['openId']);
         if ($info) {
+            $this->setUserLoginInfo($ip, $info->getUserId());
             Session::set('user_id', $info->getUserId());
         } else {
             if ($phone == '') {
@@ -187,7 +190,7 @@ class UserService
      * Time: 14:38
      * 更新用户登录信息
      */
-    public function setUserInfo($ip, $id)
+    public function setUserLoginInfo($ip, $id)
     {
         $info = User::find($id);
         $info->setIp($ip);
@@ -278,6 +281,50 @@ class UserService
     {
         $info = User::find($user_id);
         $info->setStatus($status);
+        $info->update();
+    }
+
+    /**
+     * Date: 2021/6/9
+     * Time: 16:02
+     * @param int $user_id
+     * @param int $follow_id
+     * 关注用户已经关注就取消
+     */
+    public function followUser(int $user_id,int $follow_id)
+    {
+        $info=Follow::find([
+            'uid' => $user_id,
+            'follow_id' => $follow_id
+        ]);
+        if($info){
+            $info->delete();
+        }else{
+            Follow::newInstance()->setUid($user_id)->setFollowId($follow_id)->setAddTime(time());
+        }
+    }
+
+    /**
+     * Date: 2021/6/9
+     * Time: 16:14
+     * @param string $nickname
+     * @param string $head
+     * @param int $sex
+     * @param string $autograph
+     * @param string $region
+     * @param string $birthday
+     * @param int $uid
+     * 修改用户信息
+     */
+    public function setUserinfo(string $nickname,string $head,int $sex,string $autograph,string $region,string $birthday,int $uid)
+    {
+        $info=User::find($uid);
+        $info->setNickname($nickname);
+        $info->setHead($head);
+        $info->setSex($sex);
+        $info->setAutograph($autograph);
+        $info->setRegion($region);
+        $info->setBirthday($birthday);
         $info->update();
     }
 }

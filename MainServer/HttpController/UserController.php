@@ -101,4 +101,33 @@ class UserController extends SingletonHttpController
             'data' => $this->UserService->getUserInfo(Session::get('user_id')),
         ];
     }
+
+    /**
+     * Date: 2021/6/9
+     * Time: 16:04
+     * @Action
+     * @Route(method="POST")
+     * @param int $follow_id
+     */
+    public function followUser(int $follow_id)
+    {
+        $this->UserService->followUser(Session::get('user_id'),$follow_id);
+    }
+
+    /**
+     * Date: 2021/6/9
+     * Time: 16:15
+     * @Action
+     * @Route(method="POST")
+     * @param string $nickname
+     * @param string $head
+     * @param int $sex
+     * @param string $autograph
+     * @param string $region
+     * @param string $birthday
+     */
+    public function setUserinfo(string $nickname,string $head,int $sex,string $autograph,string $region,string $birthday)
+    {
+        $this->UserService->setUserinfo($nickname,$head,$sex,$autograph,$region,$birthday,Session::get('user_id'));
+    }
 }
