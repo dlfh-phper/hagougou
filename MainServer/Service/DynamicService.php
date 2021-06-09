@@ -291,8 +291,8 @@ class DynamicService
      */
     public function getLabelSearch(int $page,int $page_size,string $label)
     {
-        $list=Wechat::query()->whereRaw("label->'$.label'='{$label}'")->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
-        $count=Wechat::query()->whereRaw("label->'$.label'='{$label}'")->count('id');
+        $list=Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
+        $count=Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->count('id');
         return [
             'list'=>$list,
             'count'=>$count

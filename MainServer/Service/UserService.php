@@ -90,12 +90,12 @@ class UserService
     {
         $wxdata = json_decode($wxdata, true);
         $info = $this->getByOpenid('wxopenid', $wxdata['openId']);
-        if (!$info->getPhone()=='') {
+        if ($info) {
             Session::set('user_id', $info->getUserId());
         } else {
             //手机号等于空不允许注册
             if ($phone == '') {
-                throw new BusinessException('false',MessageCode::SUCCESS);
+                throw new BusinessException('false',MessageCode::SUCCESS);   
             } else {
                 //先判判断手一家伙存不存在数据库里面，存在设置一下微信头像
                 $member = $this->getByPhone($phone);
@@ -128,7 +128,7 @@ class UserService
 
         $qqdata = json_decode($qqdata, true);
         $info = $this->getByOpenid('qqopenid', $qqdata['openId']);
-        if (!$info->getPhone()=='') {
+        if ($info) {
             Session::set('user_id', $info->getUserId());
         } else {
             if ($phone == '') {

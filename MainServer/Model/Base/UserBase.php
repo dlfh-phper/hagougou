@@ -13,7 +13,7 @@ use Imi\Model\Annotation\Entity;
  * @Table(name="user", id={"user_id"})
  * @DDL("CREATE TABLE `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `phone` char(30) NOT NULL COMMENT '注册手机号',
+  `phone` varchar(255) DEFAULT NULL COMMENT '注册手机号',
   `nickname` varchar(255) DEFAULT NULL COMMENT '默认昵称',
   `head` varchar(255) DEFAULT NULL COMMENT '默认头像',
   `wxopenid` varchar(255) DEFAULT NULL COMMENT '微信openid',
@@ -32,6 +32,10 @@ use Imi\Model\Annotation\Entity;
   `charmvalue` int(11) NOT NULL DEFAULT '0' COMMENT '魅力值',
   `balance` int(11) NOT NULL DEFAULT '0',
   `status` int(11) NOT NULL,
+  `sex` int(11) NOT NULL COMMENT '1男 2 女 3未定义',
+  `autograph` varchar(255) NOT NULL COMMENT '签名',
+  `region` varchar(255) NOT NULL COMMENT '地区',
+  `birthday` varchar(255) NOT NULL COMMENT '生日',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $userId 自增id
@@ -54,6 +58,10 @@ use Imi\Model\Annotation\Entity;
  * @property int $charmvalue 魅力值
  * @property int $balance 
  * @property int $status 
+ * @property int $sex 1男 2 女 3未定义
+ * @property string $autograph 签名
+ * @property string $region 地区
+ * @property string $birthday 生日
  */
 abstract class UserBase extends Model
 {
@@ -89,7 +97,7 @@ abstract class UserBase extends Model
     /**
      * 注册手机号
      * phone
-     * @Column(name="phone", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="phone", type="varchar", length=255, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var string
      */
     protected $phone;
@@ -632,6 +640,122 @@ abstract class UserBase extends Model
     public function setStatus($status)
     {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * 1男 2 女 3未定义
+     * sex
+     * @Column(name="sex", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $sex;
+
+    /**
+     * 获取 sex - 1男 2 女 3未定义
+     *
+     * @return int
+     */ 
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * 赋值 sex - 1男 2 女 3未定义
+     * @param int $sex sex
+     * @return static
+     */ 
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
+        return $this;
+    }
+
+    /**
+     * 签名
+     * autograph
+     * @Column(name="autograph", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $autograph;
+
+    /**
+     * 获取 autograph - 签名
+     *
+     * @return string
+     */ 
+    public function getAutograph()
+    {
+        return $this->autograph;
+    }
+
+    /**
+     * 赋值 autograph - 签名
+     * @param string $autograph autograph
+     * @return static
+     */ 
+    public function setAutograph($autograph)
+    {
+        $this->autograph = $autograph;
+        return $this;
+    }
+
+    /**
+     * 地区
+     * region
+     * @Column(name="region", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $region;
+
+    /**
+     * 获取 region - 地区
+     *
+     * @return string
+     */ 
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * 赋值 region - 地区
+     * @param string $region region
+     * @return static
+     */ 
+    public function setRegion($region)
+    {
+        $this->region = $region;
+        return $this;
+    }
+
+    /**
+     * 生日
+     * birthday
+     * @Column(name="birthday", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $birthday;
+
+    /**
+     * 获取 birthday - 生日
+     *
+     * @return string
+     */ 
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * 赋值 birthday - 生日
+     * @param string $birthday birthday
+     * @return static
+     */ 
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
         return $this;
     }
 

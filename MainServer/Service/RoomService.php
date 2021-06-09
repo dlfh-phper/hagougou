@@ -75,8 +75,8 @@ class RoomService
      */
        public function roomLabelSearch(string $label)
        {
-           $list=Room::query()->whereRaw("label->'$.label'='{$label}'")->select()->getArray();
-           $count=Room::query()->whereRaw("label->'$.label'='{$label}'")->count('id');
+           $list=Room::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->select()->getArray();
+           $count=Room::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->count('id');
            return [
                'list'=>$list,
                'count'=>$count
