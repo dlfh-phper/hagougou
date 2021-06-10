@@ -19,12 +19,17 @@ use ImiApp\MainServer\Model\WechatComment;
  */
 class DynamicService
 {
+
     /**
      * @Inject("UserSessionService");
      * @var
      */
     protected $UserSessionService;
-
+    /**
+     * @Inject("UserService");
+     * @var
+     */
+    protected $UserService;
     /**
      * Date: 2021/5/24
      * Time: 16:40
@@ -128,9 +133,9 @@ class DynamicService
     {
         $info=Wechat::find([
             'id'=>$wid,
-        ]);
-        $info['fabulous']=$this->spotzanniCkname($wid);
-        $info['comment']=$this->comment($wid);
+        ])->toArray();
+        $info['fabulousinfo']=$this->spotzanniCkname($wid);
+        $info['commentinfo']=$this->comment($wid);
         return $info;
     }
 
@@ -186,12 +191,19 @@ class DynamicService
      * @return array
      * 广场动态列表
      */
-    public function getWechatList(int $page,int $page_size,string $field)
+    public function getWechatList(int $page,int $page_size,string $field,int $uid)
     {
-        $list=Wechat::query()->page(($page-1)*$page_size,$page_size)->order($field,'desc')->select()->getArray();
+        $list=Wechat::dbQuery()->page(($page-1)*$page_size,$page_size)->order($field,'desc')->select()->getArray();
         foreach ($list as $key=>$value)
         {
-            $list[$key]=$this->getWechatinfo($value['id']);
+            $list[$key]['Userinfo']=$this->UserService->getUserInfo($value['uid']);
+            if($uid==$value['uid'])
+            {
+                $isMay=true;
+            }else{
+                $isMay=false;
+            }
+            $this[$key]['isMay']=$isMay;
         }
         $count=Wechat::query()->count('id');
         $result['list']=$list;
@@ -230,10 +242,6 @@ class DynamicService
     public function getUserWechatList(int $page,int $page_size,int $uid)
     {
         $list=Wechat::query()->page(($page-1)*$page_size,$page_size)->where('uid','=',$uid)->order('id','desc')->select()->getArray();
-        foreach ($list as $key=>$value)
-        {
-            $list[$key]=$this->getWechatinfo($value['id']);
-        }
         $count=Wechat::query()->count('id');
         $result['list']=$list;
         $result['count']=$count;

@@ -33,7 +33,8 @@ class ApiService
         $format = strrchr($name, '.');//截取文件后缀名如 (.jpg)
         /*判断图片格式*/
         $allow_type = ['.jpg', '.jpeg', '.gif', '.bmp', '.png','.mp4','.mp3','.aac','.m4a','.pdf','.svga'];
-        if (!in_array($format, $allow_type)) {
+        //苹果系统文件后缀默认大写想，需要转换一下
+        if (!in_array(strtolower($format), $allow_type)) {
             throw new BusinessException('文件格式不被允许');
         }
         // 尝试执行
