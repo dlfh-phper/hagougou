@@ -2,6 +2,7 @@
 
 
 namespace ImiApp\MainServer\Service;
+
 use Imi\Bean\Annotation\Bean;
 use \Imi\Redis\RedisManager;
 
@@ -13,9 +14,10 @@ use \Imi\Redis\RedisManager;
 class RedisService
 {
     protected $redis;
+
     public function __construct()
     {
-        $this->redis=RedisManager::getInstance();
+        $this->redis = RedisManager::getInstance();
     }
 
     /**
@@ -24,12 +26,12 @@ class RedisService
      * @param $data
      * 设置广播交友队列消息
      */
-    public function setRedislpush(string $listname,$data)
+    public function setRedislpush(string $listname, $data)
     {
-        if($this->redis->lLen($listname)>=10){
+        if ($this->redis->lLen($listname) >= 10) {
             $this->redis->rPop($listname);
         }
-        $this->redis->lpush($listname,$data);
+        $this->redis->lpush($listname, $data);
     }
 
     /**
@@ -39,8 +41,9 @@ class RedisService
      */
     public function getRedislpushMessage(string $listname)
     {
-        $info['msg']=$this->redis->lindex($listname,-9);
-        $info['list']=$this->redis->lrange($listname,0,-1);
+        $info['msg'] = $this->redis->lindex($listname, -9);
+        $info['list'] = $this->redis->lrange($listname, 0, -1);
+
         return $info;
     }
 }

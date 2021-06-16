@@ -23,17 +23,17 @@ class OfficialmsgService
      * @param int $id
      * 添加修改消息
      */
-    public function setMsg(string $title,string $content,string $img,string $previewcontent,int $id)
+    public function setMsg(string $title, string $content, string $img, string $previewcontent, int $id)
     {
-        $info=Officialmsg::newInstance();
-        $info->title=$title;
-        $info->content=$content;
-        $info->img=$img;
-        $info->previewcontent=$previewcontent;
-        if($id){
-            $info->id=$id;
+        $info = Officialmsg::newInstance();
+        $info->title = $title;
+        $info->content = $content;
+        $info->img = $img;
+        $info->previewcontent = $previewcontent;
+        if ($id) {
+            $info->id = $id;
         }
-        $info->add_time=time();
+        $info->add_time = time();
         $info->save();
     }
 
@@ -45,13 +45,14 @@ class OfficialmsgService
      * @return array
      * 消息列表
      */
-    public function  getMsgList(int $page,int $page_size)
+    public function getMsgList(int $page, int $page_size)
     {
-        $list=Officialmsg::query()->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
-        $count=Officialmsg::count();
+        $list = Officialmsg::query()->page($page, $page_size)->order('id', 'desc')->select()->getArray();
+        $count = Officialmsg::count();
+
         return [
             'list' => $list,
-            'count' => $count
+            'count' => $count,
         ];
     }
 

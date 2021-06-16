@@ -2,6 +2,7 @@
 
 
 namespace ImiApp\MainServer\Service;
+
 use EasySwoole\Pay\WeChat\Config;
 use EasySwoole\Pay\WeChat\WeChatPay\OfficialAccount;
 use EasySwoole\Spl\SplBean;
@@ -10,6 +11,7 @@ use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Model\Paylog;
 use Yurun\Util\YurunHttp;
 use Imi\Bean\Annotation\Bean;
+
 YurunHttp::setDefaultHandler('Yurun\Util\YurunHttp\Handler\Swoole');
 
 /**
@@ -21,10 +23,10 @@ class PayService
 {
     public function easywxpay(string $openid)
     {
-        try{
-            $callbackurl='https://api.haihaixingqiu.com/pay/wxcallbacku';
-            $out_trade_no=uniqid().rand(1000,9999);
-            $info=Paylog::newInstance();
+        try {
+            $callbackurl = 'https://api.haihaixingqiu.com/pay/wxcallbacku';
+            $out_trade_no = uniqid().rand(1000, 9999);
+            $info = Paylog::newInstance();
             $info->setAddTime(time());
             $info->setOpenid($openid);
             $info->setStatus(1);
@@ -45,8 +47,9 @@ class PayService
             $officialAccount->setSpbillCreateIp('139.196.231.67');
             $pay = new \EasySwoole\Pay\Pay();
             $params = $pay->weChat($wechatConfig)->officialAccount($officialAccount);
+
             return $params;
-        }catch (BusinessException $bu){
+        } catch (BusinessException $bu) {
             throw new BusinessException($bu->getMessage());
         }
 

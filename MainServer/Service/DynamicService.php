@@ -30,6 +30,7 @@ class DynamicService
      * @var
      */
     protected $UserService;
+
     /**
      * Date: 2021/5/24
      * Time: 16:40
@@ -37,9 +38,9 @@ class DynamicService
      * @param string $url
      * 发布动态
      */
-    public function setWechat(string $text,string $url,string $label,int $uid)
+    public function setWechat(string $text, string $url, string $label, int $uid)
     {
-        $info=Wechat::newInstance();
+        $info = Wechat::newInstance();
         $info->setText($text);
         $info->setUrl($url);
         $info->setUid($uid);
@@ -57,23 +58,23 @@ class DynamicService
      * @param int $uid
      * @param int $wid
      */
-    public function spotzan(int $uid,int $wid)
+    public function spotzan(int $uid, int $wid)
     {
 
-        $result=Spotzan::find(
-            ['uid'=>$uid,'w_id'=>$wid]
+        $result = Spotzan::find(
+            ['uid' => $uid, 'w_id' => $wid]
         );
 
         //数据存在证明这个人点过赞，就删除记录
-        if(!$result){
-            $info=Spotzan::newInstance();
+        if (!$result) {
+            $info = Spotzan::newInstance();
             $info->setUid($uid);
             $info->setWId($wid);
             $info->setAddTime(time());
             $info->insert();
-            Wechat::query()->where('id','=',$wid)->setFieldInc('fabulous','1')->update();
-        }else{
-            Wechat::query()->where('id','=',$wid)->setFieldDec('fabulous','1')->update();
+            Wechat::query()->where('id', '=', $wid)->setFieldInc('fabulous', '1')->update();
+        } else {
+            Wechat::query()->where('id', '=', $wid)->setFieldDec('fabulous', '1')->update();
             $result->delete();
         }
     }
@@ -88,9 +89,9 @@ class DynamicService
      * @param int $parent_id
      * @param int $reply_id
      */
-    public function setWechatComment(string $content,int $wid,int $parent_id,int $reply_id,int $uid)
+    public function setWechatComment(string $content, int $wid, int $parent_id, int $reply_id, int $uid)
     {
-        $info=WechatComment::newInstance();
+        $info = WechatComment::newInstance();
         $info->setUid($uid);
         $info->setContent($content);
         $info->setReplyId($reply_id);
@@ -98,7 +99,7 @@ class DynamicService
         $info->setParentId($parent_id);
         $info->setAddTime(time());
         $info->insert();
-        Wechat::query()->where('id','=',$wid)->setFieldInc('comment','1')->update();
+        Wechat::query()->where('id', '=', $wid)->setFieldInc('comment', '1')->update();
     }
 
     /**
@@ -110,16 +111,16 @@ class DynamicService
      * @param int $uid
      * 删除评论同时评论数量减一
      */
-    public function deleteComment(int $wid,int $comment_id,int $uid)
+    public function deleteComment(int $wid, int $comment_id, int $uid)
     {
-        $info=WechatComment::find(
+        $info = WechatComment::find(
             [
                 'w_id' => $wid,
                 'comment_id' => $comment_id,
-                'uid' => $uid
+                'uid' => $uid,
             ]);
         $info->delete();
-        Wechat::query()->where('id','=',$wid)->setFieldDec('comment','1')->update();
+        Wechat::query()->where('id', '=', $wid)->setFieldDec('comment', '1')->update();
     }
 
     /**
@@ -131,11 +132,12 @@ class DynamicService
      */
     public function getWechatinfo(int $wid)
     {
-        $info=Wechat::find([
-            'id'=>$wid,
+        $info = Wechat::find([
+            'id' => $wid,
         ])->toArray();
-        $info['fabulousinfo']=$this->spotzanniCkname($wid);
-        $info['commentinfo']=$this->comment($wid);
+        $info['fabulousinfo'] = $this->spotzanniCkname($wid);
+        $info['commentinfo'] = $this->comment($wid);
+
         return $info;
     }
 
@@ -148,16 +150,17 @@ class DynamicService
      */
     public function spotzanniCkname(int $wid)
     {
-        $info=Spotzan::query()->where('w_id','=',$wid)->order('id','desc')->select()->getArray();
-        foreach ($info as $key=>$value){
-            $user=User::find($value['uid']);
+        $info = Spotzan::query()->where('w_id', '=', $wid)->order('id', 'desc')->select()->getArray();
+        foreach ($info as $key => $value) {
+            $user = User::find($value['uid']);
             //获取点赞人的昵称
-            $spotzann[$key]['nickname']=$user['nickname'] ?? $user['wxname'] ?? $user['qqname'];
-            $spotzann[$key]['head']=$user['head'] ?? $user['wxhead'] ?? $user['qqhead'];
+            $spotzann[$key]['nickname'] = $user['nickname'] ?? $user['wxname'] ?? $user['qqname'];
+            $spotzann[$key]['head'] = $user['head'] ?? $user['wxhead'] ?? $user['qqhead'];
             //获取动态图片
-            $imgcontent=Wechat::find(['id'=>$wid]);
-            $spotzann[$key]['imgcontent']=$imgcontent->getUrl() ?? '';
+            $imgcontent = Wechat::find(['id' => $wid]);
+            $spotzann[$key]['imgcontent'] = $imgcontent->getUrl() ?? '';
         }
+
         return $spotzann;
     }
 
@@ -170,16 +173,17 @@ class DynamicService
      */
     public function comment(int $wid)
     {
-        $info=WechatComment::query()->where('w_id','=',$wid)->order('comment_id','desc')->select()->getArray();
-        foreach ($info as $key=>$value){
-            if($value['reply_id']){
-                $user=User::find($value['reply_id']);
-                $info[$key]['reply_id']=$user['nickname'] ?? $user['wxname'] ?? $user['qqname'];
-                $info[$key]['head']=$user['head'] ?? $user['wxhead'] ?? $user['qqhead'];
-                $textcontent=Wechat::find(['id'=>$wid]);
-                $info[$key]['textcontent']=$textcontent->getText() ?? '';
+        $info = WechatComment::query()->where('w_id', '=', $wid)->order('comment_id', 'desc')->select()->getArray();
+        foreach ($info as $key => $value) {
+            if ($value['reply_id']) {
+                $user = User::find($value['reply_id']);
+                $info[$key]['reply_id'] = $user['nickname'] ?? $user['wxname'] ?? $user['qqname'];
+                $info[$key]['head'] = $user['head'] ?? $user['wxhead'] ?? $user['qqhead'];
+                $textcontent = Wechat::find(['id' => $wid]);
+                $info[$key]['textcontent'] = $textcontent->getText() ?? '';
             }
         }
+
         return $info;
     }
 
@@ -191,23 +195,22 @@ class DynamicService
      * @return array
      * 广场动态列表
      */
-    public function getWechatList(int $page,int $page_size,string $field,int $uid)
+    public function getWechatList(int $page, int $page_size, string $field, int $uid)
     {
-        $list=Wechat::dbQuery()->page(($page-1)*$page_size,$page_size)->order($field,'desc')->select()->getArray();
-        foreach ($list as $key=>$value)
-        {
-            $list[$key]['Userinfo']=$this->UserService->getUserInfo($value['uid']);
-            if($uid==$value['uid'])
-            {
-                $isMay=true;
-            }else{
-                $isMay=false;
+        $list = Wechat::dbQuery()->page($page, $page_size)->order($field, 'desc')->select()->getArray();
+        foreach ($list as $key => $value) {
+            $list[$key]['Userinfo'] = $this->UserService->getUserInfo($value['uid'])->toArray();
+            if ($uid == $value['uid']) {
+                $isMay = true;
+            } else {
+                $isMay = false;
             }
-            $this[$key]['isMay']=$isMay;
+            $list[$key]['isMay'] = $isMay;
         }
-        $count=Wechat::query()->count('id');
-        $result['list']=$list;
-        $result['count']=$count;
+        $count = Wechat::query()->count('id');
+        $result['list'] = $list;
+        $result['count'] = $count;
+
         return $result;
     }
 
@@ -218,18 +221,18 @@ class DynamicService
      * @param int $wid
      * @param int $uid
      */
-    public function deleteWechat(int $wid,int $uid)
+    public function deleteWechat(int $wid, int $uid)
     {
         //删除动态
-        $info=Wechat::find([
-            'id'=>$wid,
-            'uid'=>$uid
+        $info = Wechat::find([
+            'id' => $wid,
+            'uid' => $uid,
         ]);
         $info->delete();
         //删除点赞信息
-        Spotzan::query()->where('w_id','=',$wid)->where('uid','=',$uid)->delete();
+        Spotzan::query()->where('w_id', '=', $wid)->where('uid', '=', $uid)->delete();
         //删除评论信息
-        WechatComment  ::query()->where('w_id','=',$wid)->where('uid','=',$uid)->delete();
+        WechatComment::query()->where('w_id', '=', $wid)->where('uid', '=', $uid)->delete();
 
     }
 
@@ -239,12 +242,14 @@ class DynamicService
      * @param int $page
      * @param int $page_size
      */
-    public function getUserWechatList(int $page,int $page_size,int $uid)
+    public function getUserWechatList(int $page, int $page_size, int $uid)
     {
-        $list=Wechat::query()->page(($page-1)*$page_size,$page_size)->where('uid','=',$uid)->order('id','desc')->select()->getArray();
-        $count=Wechat::query()->count('id');
-        $result['list']=$list;
-        $result['count']=$count;
+        $list = Wechat::query()->page($page, $page_size)->where('uid', '=', $uid)->order('id',
+            'desc')->select()->getArray();
+        $count = Wechat::query()->count('id');
+        $result['list'] = $list;
+        $result['count'] = $count;
+
         return $result;
     }
 
@@ -256,17 +261,18 @@ class DynamicService
      * @param int $uid
      * 点赞动态
      */
-    public function getSpotzanDynamic(int $page,int $page_size,int $uid)
+    public function getSpotzanDynamic(int $page, int $page_size, int $uid)
     {
-        $list=Spotzan::query()->where('have_id','=',$uid)->where('uid','<>',$uid)->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
-        foreach ($list as $key=>$value)
-        {
-            $list[$key]['Spotzan']=$this->spotzanniCkname($value['w_id']);
+        $list = Spotzan::query()->where('have_id', '=', $uid)->where('uid', '<>', $uid)->page(($page - 1) * $page_size,
+            $page_size)->order('id', 'desc')->select()->getArray();
+        foreach ($list as $key => $value) {
+            $list[$key]['Spotzan'] = $this->spotzanniCkname($value['w_id']);
         }
-        $count=Spotzan::query()->where('have_id','=',$uid)->where('uid','<>',$uid)->count('id');
+        $count = Spotzan::query()->where('have_id', '=', $uid)->where('uid', '<>', $uid)->count('id');
+
         return [
             'data' => $list,
-            'count' => $count
+            'count' => $count,
         ];
     }
 
@@ -278,17 +284,18 @@ class DynamicService
      * @param int $uid
      * 回复动态
      */
-    public function getCommentDynamic(int $page,int $page_size,int $uid)
+    public function getCommentDynamic(int $page, int $page_size, int $uid)
     {
-        $list=WechatComment::query()->where('have_id','=',$uid)->where('uid','<>',$uid)->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
-        foreach ($list as $key=>$value)
-        {
-            $list[$key]['comment']=$this->comment($value['w_id']);
+        $list = WechatComment::query()->where('have_id', '=', $uid)->where('uid', '<>',
+            $uid)->page(($page - 1) * $page_size, $page_size)->order('id', 'desc')->select()->getArray();
+        foreach ($list as $key => $value) {
+            $list[$key]['comment'] = $this->comment($value['w_id']);
         }
-        $count=WechatComment::query()->where('have_id','=',$uid)->where('uid','<>',$uid)->count('id');
+        $count = WechatComment::query()->where('have_id', '=', $uid)->where('uid', '<>', $uid)->count('id');
+
         return [
             'data' => $list,
-            'count' => $count
+            'count' => $count,
         ];
     }
 
@@ -298,13 +305,15 @@ class DynamicService
      * @param string $label
      * @return array
      */
-    public function getLabelSearch(int $page,int $page_size,string $label)
+    public function getLabelSearch(int $page, int $page_size, string $label)
     {
-        $list=Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
-        $count=Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->count('id');
+        $list = Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->page(($page - 1) * $page_size,
+            $page_size)->order('id', 'desc')->select()->getArray();
+        $count = Wechat::query()->whereRaw("JSON_CONTAINS(label,JSON_OBJECT('label', '{$label}'))")->count('id');
+
         return [
-            'list'=>$list,
-            'count'=>$count
+            'list' => $list,
+            'count' => $count,
         ];
     }
 
@@ -317,17 +326,18 @@ class DynamicService
      * @return array
      * 获取被关注的动态
      */
-    public function getFlollowWechat(int $page,int $page_size,int $uid)
+    public function getFlollowWechat(int $page, int $page_size, int $uid)
     {
         //获取被关注人的id
-        $flollowarr=Follow::dbQuery()->where('uid','=',$uid)->select()->getArray();
+        $flollowarr = Follow::dbQuery()->where('uid', '=', $uid)->select()->getArray();
         //转为一维数组
-        $flollowarr=array_column($flollowarr,'follow_id');
-        $list=Wechat::query()->whereIn('uid',$flollowarr)->order('id','desc')->select()->getArray();
-        $count=Wechat::query()->whereIn('uid',$flollowarr)->select()->getRowCount();
+        $flollowarr = array_column($flollowarr, 'follow_id');
+        $list = Wechat::query()->whereIn('uid', $flollowarr)->order('id', 'desc')->select()->getArray();
+        $count = Wechat::query()->whereIn('uid', $flollowarr)->select()->getRowCount();
+
         return [
-            'list'=>$list,
-            'count'=>$count
+            'list' => $list,
+            'count' => $count,
         ];
     }
 }

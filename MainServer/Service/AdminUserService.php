@@ -24,23 +24,23 @@ class AdminUserService
      * @param string $ip
      * @throws NotFoundException
      */
-    public function adminUserLogin(string $account,string $password,string $ip)
+    public function adminUserLogin(string $account, string $password, string $ip)
     {
-        $record=$this->getByaccount($account);
-        if($record){
-            if($record->getStatus()==1){
-                if(password_verify($password,$record->getPassword())){
-                    $record->ip=$ip;
-                    $record->login_time=time();
+        $record = $this->getByaccount($account);
+        if ($record) {
+            if ($record->getStatus() == 1) {
+                if (password_verify($password, $record->getPassword())) {
+                    $record->ip = $ip;
+                    $record->login_time = time();
                     $record->save();
-                    Session::set('adminuser_id',$record->admin_id);
-                }else{
+                    Session::set('adminuser_id', $record->admin_id);
+                } else {
                     throw new BusinessException('账户或密码错误, 请查证后在登录');
                 }
-            }else{
+            } else {
                 throw new BusinessException("账户异常请联系管理员");
             }
-        }else{
+        } else {
             throw new BusinessException('用户不存在');
         }
 
@@ -55,7 +55,7 @@ class AdminUserService
      */
     public function getByaccount(string $account)
     {
-        return Adminuser::find(['account'=>$account]);
+        return Adminuser::find(['account' => $account]);
     }
 
     /**
@@ -68,14 +68,13 @@ class AdminUserService
      * @throws BusinessException
      * 判断账户有没有注册，注册就抛出异常
      */
-    public function AdminUserRegister(string $account,string $password,string $jurisdiction,string $ip)
+    public function AdminUserRegister(string $account, string $password, string $jurisdiction, string $ip)
     {
-        $record =$this->getByaccount($account);
-        if($record)
-        {
+        $record = $this->getByaccount($account);
+        if ($record) {
             throw new BusinessException('账户已存在');
         }
-        $result=Adminuser::newInstance();
+        $result = Adminuser::newInstance();
         $result->setAccount($account);
         $result->setPassword(password_hash($password, PASSWORD_BCRYPT));
         $result->setJurisdiction($jurisdiction);
@@ -94,13 +93,13 @@ class AdminUserService
      * @throws BusinessException
      * 设置管理员状态
      */
-    public function setAdminUserStatus(int $admin_id,int $status)
+    public function setAdminUserStatus(int $admin_id, int $status)
     {
-        $info=Adminuser::find($admin_id);
-        if($info){
+        $info = Adminuser::find($admin_id);
+        if ($info) {
             $info->setStatus($status);
             $info->update();
-        }else{
+        } else {
             throw new BusinessException('ID为'.$admin_id.'的管理员不存在');
         }
     }

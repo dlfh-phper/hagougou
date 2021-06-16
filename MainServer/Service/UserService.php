@@ -47,9 +47,10 @@ class UserService
         $info->setQqname($data['qqname'] ?? '');
         $info->setRandId($randid);
         $info->setStatus(1);
-        $info->setSex('3');
+        $info->setSex('0');
         $info->setBirthday('1997-10-26');
         $info->setRegion('江苏无锡');
+        $info->setAutograph('.....');
         $info->insert();
     }
 
@@ -93,6 +94,7 @@ class UserService
     public function wxlogin(string $phone, string $ip, string $wxdata)
     {
         $wxdata = json_decode($wxdata, true);
+        var_dump($wxdata);
         $info = $this->getByOpenid('wxopenid', $wxdata['openId']);
         if ($info) {
             $this->setUserLoginInfo($ip, $info->getUserId());
@@ -208,7 +210,7 @@ class UserService
     public function getRandUserinfo(int $num)
     {
         $count = User::count('user_id');
-        $info = User::query()->page(mt_rand(1, $count), $num)->select()->getArray();
+        $info = User::dbQuery()->page(mt_rand(1, $count), $num)->select()->getArray();
         foreach ($info as $key => $value) {
             $info[$key]['dynamic'] = Wechat::query()->where('uid', '=', $value['user_id'])->order('id', 'desc')->page(0,
                 3)->select()->getArray();
@@ -241,7 +243,7 @@ class UserService
      */
     public function nickNameAndIdSearch(string $Search, string $page, string $page_size)
     {
-        $info = User::query()->whereRaw("nickname LIKE '%{$Search}%' OR user_id LIKE '%{$Search}%'")->page(($page - 1) * $page_size,
+        $info = User::query()->whereRaw("nickname LIKE '%{$Search}%' OR user_id LIKE '%{$Search}%'")->page($page,
             $page_size)->order('user_id', 'desc')->select()->getArray();
         $count = User::query()->whereRaw("nickname LIKE '%{$Search}%' OR user_id LIKE '%{$Search}%'")->select()->getRowCount();
 
@@ -260,7 +262,7 @@ class UserService
      */
     public function getMemberlist(int $page, int $page_size, string $field)
     {
-        $list = User::query()->page(($page - 1) * $page_size, $page_size)->order('user_id',
+        $list = User::query()->page($page, $page_size)->order('user_id',
             'desc')->select()->getArray();
         $count = User::count();
 

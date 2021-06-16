@@ -5,6 +5,8 @@ namespace ImiApp\MainServer\HttpController;
 
 
 use Imi\Controller\SingletonHttpController;
+use Imi\Db\Db;
+use Imi\Db\Query\Lock\MysqlLock;
 use Imi\JWT\Facade\JWT;
 use Imi\Server\Route\Annotation\Controller;
 use Imi\HttpValidate\Annotation\HttpValidation;
@@ -145,7 +147,8 @@ class DynamicController extends SingletonHttpController
     public function getWechatList(int $page,int $page_size,string $field)
     {
         return [
-            'data' =>$this->DynamicService->getWechatList($page,$page_size,$field,Session::get('user_id'))
+            'data' =>$this->DynamicService->getWechatList($page,$page_size,$field,'1')
+//                'data' => Session::get('user_id')
         ];
     }
 
@@ -260,6 +263,7 @@ class DynamicController extends SingletonHttpController
      */
     public function getSessionValue()
     {
+        Db::query()->from('tb_xxx')->where('id', '=', 1)->lock(MysqlLock::SHARED)->select()->get();
         var_dump($this->UserSessionService->getUserId());
         var_dump(Session::get('user_id'));
     }

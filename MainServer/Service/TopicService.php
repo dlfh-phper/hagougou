@@ -21,13 +21,13 @@ class TopicService
      * @param int $id
      * 设置热议话题，有id修改，id为空添加
      */
-    public function setTopic(string $label,string $url,int $id)
+    public function setTopic(string $label, string $url, int $id)
     {
         $info = Topic::newInstance();
-        $info->label=$label;
-        $info->url=$url;
-        $info->add_time=time();
-        $info->id=$id;
+        $info->label = $label;
+        $info->url = $url;
+        $info->add_time = time();
+        $info->id = $id;
         $info->save();
     }
 
@@ -37,13 +37,14 @@ class TopicService
      * @param int $page
      * @param int $page_size
      */
-    public function getTopiclist(int $page,int $page_size)
+    public function getTopiclist(int $page, int $page_size)
     {
-        $list=Topic::query()->page(($page-1)*$page_size,$page_size)->order('id','desc')->select()->getArray();
-        $count=Topic::count();
+        $list = Topic::query()->page($page, $page_size)->order('id', 'desc')->select()->getArray();
+        $count = Topic::count();
+
         return [
-            'list'=>$list,
-            'count'=>$count
+            'list' => $list,
+            'count' => $count,
         ];
     }
 
@@ -54,7 +55,7 @@ class TopicService
      */
     public function deleteTopic(string $id)
     {
-        $idlist=explode(',',$id);
-        Topic::query()->whereIn('id',$idlist)->delete();
+        $idlist = explode(',', $id);
+        Topic::query()->whereIn('id', $idlist)->delete();
     }
 }

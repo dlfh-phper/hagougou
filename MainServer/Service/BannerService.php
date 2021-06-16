@@ -5,6 +5,7 @@ namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
 use ImiApp\MainServer\Model\Banner;
+
 /**
  * @Bean("BannerService")
  */
@@ -19,7 +20,8 @@ class BannerService
      */
     public function getBanner(string $position)
     {
-        $info=Banner::find(['position'=>$position]);
+        $info = Banner::find(['position' => $position]);
+
         return $info;
     }
 
@@ -30,9 +32,9 @@ class BannerService
      * @param string $position
      * 添加轮播图
      */
-    public function setBanner(string $content,string $position)
+    public function setBanner(string $content, string $position)
     {
-        $info=Banner::newInstance();
+        $info = Banner::newInstance();
         $info->setAddTime(time());
         $info->setContent($content);
         $info->setPosition($position);
@@ -47,8 +49,8 @@ class BannerService
      */
     public function deleteBanner(string $id)
     {
-        $idlist=explode(',',$id);
-        Banner::query()->whereIn('id',$idlist)->delete();
+        $idlist = explode(',', $id);
+        Banner::query()->whereIn('id', $idlist)->delete();
 //        Banner::deleteBatch(['id'=>$id]);
     }
 
@@ -59,7 +61,8 @@ class BannerService
      */
     public function getBannerList()
     {
-         $info=Banner::dbQuery()->order('id','desc')->select()->getArray();
+        $info = Banner::dbQuery()->order('id', 'desc')->select()->getArray();
+
 //         var_dump($info);
         return $info;
     }

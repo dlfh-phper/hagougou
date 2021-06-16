@@ -2,6 +2,7 @@
 
 
 namespace ImiApp\MainServer\Service;
+
 use Imi\Bean\Annotation\Bean;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Model\Adminuser;
@@ -25,11 +26,11 @@ class JurisdictionService
      */
     public function setMoudle(string $name)
     {
-        $moudle=Moudle::find(['name'=>$name]);
-        if($moudle){
+        $moudle = Moudle::find(['name' => $name]);
+        if ($moudle) {
             throw new BusinessException("模块已存在");
-        }else{
-            $info=Moudle::newInstance();
+        } else {
+            $info = Moudle::newInstance();
             $info->setName($name);
             $info->setAddTime(time());
             $info->insert();
@@ -44,14 +45,13 @@ class JurisdictionService
      * @throws BusinessException
      * 设置权限节点，节点在模块下面
      */
-    public function setNode(string $name,int $moudle_id)
+    public function setNode(string $name, int $moudle_id)
     {
-        $node=Node::find(['node_name'=>$name,'moudle_id'=>$moudle_id]);
-        if($node)
-        {
+        $node = Node::find(['node_name' => $name, 'moudle_id' => $moudle_id]);
+        if ($node) {
             throw new BusinessException("模块下已有该功能");
-        }else{
-            $info=Node::newInstance();
+        } else {
+            $info = Node::newInstance();
             $info->setNodeName($name);
             $info->setMoudleId($moudle_id);
             $info->setAddTime(time());
@@ -68,9 +68,9 @@ class JurisdictionService
      */
     public function deleteMoudle(int $moudle_id)
     {
-        $node=Node::find(['moudle_id'=>$moudle_id]);
-        if($node){
-           throw new BusinessException('请先删除模块下面的节点');
+        $node = Node::find(['moudle_id' => $moudle_id]);
+        if ($node) {
+            throw new BusinessException('请先删除模块下面的节点');
         }
 
         Moudle::find($moudle_id)->delete();
@@ -94,19 +94,20 @@ class JurisdictionService
      * @param int $page
      * @param int $page_size
      */
-    public function getJurisdictionList(int $page,int $page_size)
+    public function getJurisdictionList(int $page, int $page_size)
     {
-        $list=Moudle::dbQuery()->page(($page-1)*$page_size,$page_size)->select()->getArray();
-        foreach ($list as $key=>$value)
-        {
-            $list[$key]['node']=Node::query()->where('moudle_id','=',$value['id'])->select()->getArray();
+        $list = Moudle::dbQuery()->page($page, $page_size)->select()->getArray();
+        foreach ($list as $key => $value) {
+            $list[$key]['node'] = Node::query()->where('moudle_id', '=', $value['id'])->select()->getArray();
         }
-        $count=Moudle::count('id');
+        $count = Moudle::count('id');
+
         return [
-           'list'=>$list,
-           'count' =>$count
+            'list' => $list,
+            'count' => $count,
         ];
     }
+
     /**
      * Date: 2021/5/31
      * Time: 13:45
@@ -116,16 +117,15 @@ class JurisdictionService
      * @throws BusinessException
      * 权限验证
      */
-    public function verificationJurisdictionService(int $uid,int $moudle_id,int $node_id)
+    public function verificationJurisdictionService(int $uid, int $moudle_id, int $node_id)
     {
-        $info=Adminuser::find($uid);
-        $jurisdiction=json_decode($info->getJurisdiction(),true);
-        if(!$jurisdiction==0){
-            if(strpos(implode($jurisdiction[$moudle_id-1]['path']),$node_id) ==false)
-            {
+        $info = Adminuser::find($uid);
+        $jurisdiction = json_decode($info->getJurisdiction(), true);
+        if (!$jurisdiction == 0) {
+            if (strpos(implode($jurisdiction[$moudle_id - 1]['path']), $node_id) == false) {
                 throw new BusinessException('权限验证失败,请联系管理员');
             }
-        }else{
+        } else {
             throw new BusinessException('您没有权限,请联系管理员');
         }
     }
