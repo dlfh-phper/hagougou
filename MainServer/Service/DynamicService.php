@@ -337,7 +337,10 @@ class DynamicService
         }
         //转为一维数组
         $flollowarr = array_column($flollowarr, 'follow_id');
-        $list = Wechat::query()->whereIn('uid', $flollowarr)->page($page,$page_size)->order('id', 'desc')->select()->getArray();
+        $list = Wechat::dbquery()->whereIn('uid', $flollowarr)->page($page,$page_size)->order('id', 'desc')->select()->getArray();
+        foreach ($list as $key => $value) {
+            $list[$key]['Userinfo'] = $this->UserService->getUserInfo($value['uid'])->toArray();
+        }
         $count = Wechat::query()->whereIn('uid', $flollowarr)->select()->getRowCount();
 
         return [

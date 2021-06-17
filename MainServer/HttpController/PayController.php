@@ -18,6 +18,7 @@ use Imi\Aop\Annotation\Inject;
 use Imi\Server\Session\Session;
 use Imi\Config;
 use ImiApp\MainServer\Model\Rechargelog;
+use ImiApp\MainServer\Model\User;
 
 /**
  * Class PayController
@@ -92,10 +93,12 @@ class PayController extends SingletonHttpController
                 $rechargelog->setCompleteTime(time());
                 $rechargelog->setStatus(2);
                 $rechargelog->setPrice($payer_total);
+                $rechargelog->update();
+                //修改账户余额
+                User::query()->where('user_id','=',$rechargelog->getUid())->setFieldInc('balance',$payer_total)->update();
             }else{
                 \EasySwoole\Pay\WeChat\WeChat::fail();
             }
-            Db::query()->table('rechargelog')->where('out_trade_no','=',$params['out_trade_no'])->update($data);
             \EasySwoole\Pay\WeChat\WeChat::success();
         }else{
             \EasySwoole\Pay\WeChat\WeChat::fail();
