@@ -4,6 +4,7 @@
 namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
+use Imi\Db\Db;
 use ImiApp\MainServer\Model\Banner;
 
 /**
@@ -20,9 +21,9 @@ class BannerService
      */
     public function getBanner(string $position)
     {
-        $info = Banner::find(['position' => $position]);
-
-        return $info;
+        $info = Banner::query()->where('position','=',$position)->order('id','desc')->select();
+        $res=$info->get();
+        return $res;
     }
 
     /**
@@ -62,8 +63,6 @@ class BannerService
     public function getBannerList()
     {
         $info = Banner::dbQuery()->order('id', 'desc')->select()->getArray();
-
-//         var_dump($info);
         return $info;
     }
 }
