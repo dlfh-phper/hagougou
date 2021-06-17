@@ -16,6 +16,8 @@ return [
 
     // 组件命名空间
     'components'    =>  [
+        'AccessControl'    =>  'Imi\AC',
+        'jwt'    =>  'Imi\JWT',
     ],
 
     // 主服务器配置
@@ -26,6 +28,7 @@ return [
         'port'      =>  8081,
         'mode'      =>  SWOOLE_BASE,
         'configs'   =>    [
+            'package_max_length' => 1024 * 1024 *50,
             // 'worker_num'        =>  8,
             // 'task_worker_num'   =>  16,
         ],
@@ -159,7 +162,7 @@ return [
                 'ImiApp\MainServer\Model' =>  [
                     // 在该命名空间下，允许生成的表
                     'tables'    =>  [
-                        'room'
+                        'adminuser'
                     ],
                 ],
             ]

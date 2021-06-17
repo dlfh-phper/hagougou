@@ -147,7 +147,7 @@ class DynamicController extends SingletonHttpController
     public function getWechatList(int $page,int $page_size,string $field)
     {
         return [
-            'data' =>$this->DynamicService->getWechatList($page,$page_size,$field,'1')
+            'data' =>$this->DynamicService->getWechatList($page,$page_size,$field,Session::get('user_id'))
 //                'data' => Session::get('user_id')
         ];
     }
@@ -179,8 +179,6 @@ class DynamicController extends SingletonHttpController
      */
     public function delete(int $wid)
     {
-//        $token = JWT::parseToken($this->request->getHeader('Authorization'), 'haihai');
-//        $uid = (array)$token->getClaim('data');
         $this->DynamicService->deleteWechat($wid,Session::get('user_id'));
     }
 

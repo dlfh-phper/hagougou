@@ -90,4 +90,18 @@ class ApiService
         return true;
     }
 
+    /**
+     * Date: 2021/6/16
+     * Time: 16:47
+     * @param int $uid
+     * @return string
+     * @throws \Exception
+     */
+    public function genUserSig(int $uid)
+    {
+        $api=new \Tencent\TLSSigAPIv2('1400525717','3e8f22ec23852ef8801d8bc74248d3e839518d2638841ad4c9963f7de3fc8eb6');
+        return $api->genSig($uid);
+
+    }
+
 }

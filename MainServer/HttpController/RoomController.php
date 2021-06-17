@@ -34,6 +34,11 @@ class RoomController extends SingletonHttpController
      */
     protected $UserSessionService;
     /**
+     * @var
+     * @Inject("ApiService");
+     */
+    protected $ApiService;
+    /**
      * Date: 2021/5/20
      * Time: 13:48
      * @Action
@@ -88,8 +93,6 @@ class RoomController extends SingletonHttpController
      */
     public function getRoominfo()
     {
-        $token = JWT::parseToken($this->request->getHeader('Authorization'), 'haihai');
-        $uid = (array)$token->getClaim('data');
         return [
           'data'=>$this->RoomService->getRoomInfo(Session::get('user_id'))
         ];
@@ -106,6 +109,20 @@ class RoomController extends SingletonHttpController
     {
         return [
             'data'=>$this->RoomService->getRoomBlacklistInfo(Session::get('user_id'))
+        ];
+    }
+
+    /**
+     * Date: 2021/6/16
+     * Time: 16:31
+     * @Action
+     * @Route(method="POST")
+     * @return array
+     */
+    public function getTLSSigAPIv2()
+    {
+        return [
+          'data' => $this->ApiService->genUserSig(Session::get('user_id'))
         ];
     }
 }

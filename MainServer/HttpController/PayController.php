@@ -17,6 +17,7 @@ use Imi\Validate\Annotation\Regex;
 use Imi\Aop\Annotation\Inject;
 use Imi\Server\Session\Session;
 use Imi\Config;
+use ImiApp\MainServer\Model\Rechargelog;
 
 /**
  * Class PayController
@@ -67,6 +68,39 @@ class PayController extends SingletonHttpController
         }
     }
 
+    /**
+     * Date: 2021/6/16
+     * Time: 15:47
+     * @Action
+     * @Route(method="POST")
+     */
+    public function RechargeCallbackUrl()
+    {
+        $content=$this->request->getBody();
+        $jsonxml = json_encode(simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA));
+        $params = json_decode($jsonxml, true);
+        if($params['return_code'] == 'SUCCESS' && $params['result_code'] == 'SUCCESS'){
+            $rechargelog=Rechargelog::find([
+                'out_trade_no' => $params['out_trade_no']
+            ]);
+            if($rechargelog){
+                $payer_total=json_decode($params['amount'],true);
+                if($rechargelog->getType()=='ios'){
+                    //ios充值要扣掉30%的平台税
+                    $payer_total=$payer_total-($payer_total * 0.3);
+                }
+                $rechargelog->setCompleteTime(time());
+                $rechargelog->setStatus(2);
+                $rechargelog->setPrice($payer_total);
+            }else{
+                \EasySwoole\Pay\WeChat\WeChat::fail();
+            }
+            Db::query()->table('rechargelog')->where('out_trade_no','=',$params['out_trade_no'])->update($data);
+            \EasySwoole\Pay\WeChat\WeChat::success();
+        }else{
+            \EasySwoole\Pay\WeChat\WeChat::fail();
+        }
+    }
     /**
      * Date: 2021/6/4
      * Time: 11:22

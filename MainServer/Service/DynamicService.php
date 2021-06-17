@@ -4,6 +4,7 @@
 namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
+use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Model\Follow;
 use ImiApp\MainServer\Model\Spotzan;
 use ImiApp\MainServer\Model\User;
@@ -330,9 +331,13 @@ class DynamicService
     {
         //获取被关注人的id
         $flollowarr = Follow::dbQuery()->where('uid', '=', $uid)->select()->getArray();
+        //数组为空说明没有关注的人返回空
+        if(empty($flollowarr)){
+            return '';
+        }
         //转为一维数组
         $flollowarr = array_column($flollowarr, 'follow_id');
-        $list = Wechat::query()->whereIn('uid', $flollowarr)->order('id', 'desc')->select()->getArray();
+        $list = Wechat::query()->whereIn('uid', $flollowarr)->page($page,$page_size)->order('id', 'desc')->select()->getArray();
         $count = Wechat::query()->whereIn('uid', $flollowarr)->select()->getRowCount();
 
         return [

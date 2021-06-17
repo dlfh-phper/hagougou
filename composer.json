@@ -8,7 +8,9 @@
         "imiphp/imi-access-control": "~1.0",
         "imiphp/imi-jwt": "~1.0",
         "aliyuncs/oss-sdk-php": "^2.4",
-        "yurunsoft/yurun-http": "^4.0.0"
+        "yurunsoft/yurun-http": "^4.0.0",
+        "tencent/tls-sig-api-v2": "1.0"
+
 	},
 
     "autoload": {
