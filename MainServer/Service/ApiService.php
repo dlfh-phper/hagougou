@@ -99,6 +99,7 @@ class ApiService
      */
     public function genUserSig(int $uid)
     {
+       var_dump($uid);
         $api=new \Tencent\TLSSigAPIv2('1400525717','3e8f22ec23852ef8801d8bc74248d3e839518d2638841ad4c9963f7de3fc8eb6');
         return $api->genSig($uid);
 
