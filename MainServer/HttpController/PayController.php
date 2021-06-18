@@ -48,6 +48,21 @@ class PayController extends SingletonHttpController
     }
 
     /**
+     * Date: 2021/6/18
+     * Time: 10:30
+     * @Action
+     * @Route(method="POST")
+     * @param int $parice
+     * @param string $type
+     * @return array
+     */
+    public function apppay(int $price,string $type)
+    {
+        return [
+            'data' =>$this->PayService->Recharge($price,'1',$type),
+        ];
+    }
+    /**
      * Date: 2021/6/2
      * Time: 14:34
      * @Action

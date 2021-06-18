@@ -11,11 +11,9 @@ use Imi\RequestContext;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Model\Paylog;
 use ImiApp\MainServer\Model\Rechargelog;
-use Yurun\Util\YurunHttp;
+use ImiApp\MainServer\Model\User;
 use Imi\Bean\Annotation\Bean;
-
-YurunHttp::setDefaultHandler('Yurun\Util\YurunHttp\Handler\Swoole');
-
+use Imi\Aop\Annotation\Inject;
 /**
  * Class PayService
  * @package ImiApp\MainServer\Service.
@@ -23,6 +21,20 @@ YurunHttp::setDefaultHandler('Yurun\Util\YurunHttp\Handler\Swoole');
  */
 class PayService
 {
+    /**
+     * @var
+     * @Inject("UserService");
+     */
+    protected $UserService;
+
+    /**
+     * Date: 2021/6/18
+     * Time: 10:55
+     * @param string $openid
+     * @return \EasySwoole\Pay\WeChat\ResponseBean\OfficialAccount
+     * @throws BusinessException
+     * 供公众号支付
+     */
     public function easywxpay(string $openid)
     {
         try {
@@ -66,6 +78,9 @@ class PayService
     public function Recharge(int $price, int $uid, string $type)
     {
         try {
+            if($this->UserService->getUserInfo($uid)->getRealname()==0){
+                throw new BusinessException('请进行实名认证');
+            }
             $out_trade_no = $uid.date('YmdHis').rand(100000, 999999);
             $info = Rechargelog::newInstance();
             $info->setUid($uid);
@@ -78,7 +93,7 @@ class PayService
             $wechatConfig = new Config();
             $wechatConfig->setAppId('wx4be7cbdce64107ed');      // 除了小程序以外使用该APPID
             $wechatConfig->setMchId('1609120467');
-            $wechatConfig->setKey('82f628a4138edee38547a0b06aa08882');
+            $wechatConfig->setKey('c990d4de6242a289f817ff39eefac891');
             $wechatConfig->setNotifyUrl($callbackurl);
             $wechatConfig->setApiClientCert(getcwd().'/cert/apiclient_cert.pem');//客户端证书
             $wechatConfig->setApiClientKey(getcwd().'/cert/apiclient_key.pem'); //客户端证书秘钥

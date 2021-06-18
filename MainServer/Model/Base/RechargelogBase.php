@@ -13,7 +13,7 @@ use Imi\Model\Annotation\Entity;
  * @Table(name="rechargelog", id={"id"})
  * @DDL("CREATE TABLE `rechargelog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `price` int(11) NOT NULL COMMENT '充值金额',
+  `price` int(11) DEFAULT NULL COMMENT '充值金额',
   `uid` int(11) NOT NULL COMMENT '用户id',
   `type` varchar(255) NOT NULL COMMENT 'ios 或 Android',
   `out_trade_no` varchar(255) NOT NULL COMMENT '订单号',
@@ -66,7 +66,7 @@ abstract class RechargelogBase extends Model
     /**
      * 充值金额
      * price
-     * @Column(name="price", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="price", type="int", length=11, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var int
      */
     protected $price;
