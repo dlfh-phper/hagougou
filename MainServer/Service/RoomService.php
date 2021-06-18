@@ -109,17 +109,22 @@ class RoomService
         int $roomnumber,
         string $title,
         string $cover,
-        string $label,
-        string $introduce,
         string $eception,
         string $welcome,
-        string $blacklist,
-        string $password,
-        int $isPush = 0,
-        int $uid
+        int $uid,
+        string $label = '',
+        string $introduce = '',
+        string $blacklist = '',
+        string $password = '',
+        int $isPush = 0
     ) {
         try {
-            $room = Room::find(['roomnumber' => $roomnumber]);
+            $info = Room::find(['roomnumber' => $roomnumber]);
+            if($info){
+                $room=$info;
+            }else{
+                $room=Room::newInstance();
+            }
             $room->setRoomnumber($roomnumber);
             $room->setTitle($title);
             $room->setLabel($label);
@@ -133,7 +138,7 @@ class RoomService
             $room->setUserId($uid);
             $room->setIsStop('1');
             $room->setStartTime(time());
-            if ($room) {
+            if ($info) {
                 $room->update();
             } else {
                 $room->setGiftvalue('0');
@@ -141,7 +146,6 @@ class RoomService
                 $room->insert();
 
             }
-
             return true;
         } catch (BusinessException $businessException) {
             throw new BusinessException($businessException->getMessage());
@@ -171,8 +175,7 @@ class RoomService
      */
     public function getRoomInfo(int $uid)
     {
-        $room = Room::find(['uiser_id' => $uid]);
-
+        $room = Room::find(['user_id' => $uid]);
         return $room;
     }
 
@@ -185,7 +188,7 @@ class RoomService
      */
     public function getRoomBlacklistInfo(int $uid)
     {
-        $room = Room::find(['uiser_id' => $uid]);
+        $room = Room::find(['user_id' => $uid]);
 
         return $room->getBlacklist();
     }

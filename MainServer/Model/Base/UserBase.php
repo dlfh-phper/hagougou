@@ -30,12 +30,13 @@ use Imi\Model\Annotation\Entity;
   `rand_id` int(11) NOT NULL COMMENT '用户随机id',
   `wealthvalue` int(11) NOT NULL DEFAULT '0' COMMENT '财富值',
   `charmvalue` int(11) NOT NULL DEFAULT '0' COMMENT '魅力值',
-  `balance` int(11) NOT NULL DEFAULT '0',
+  `balance` int(11) NOT NULL DEFAULT '0' COMMENT '账户余额',
   `status` int(11) NOT NULL,
   `sex` int(11) NOT NULL COMMENT '1男 2 女 3未定义',
   `autograph` varchar(255) NOT NULL COMMENT '签名',
   `region` varchar(255) NOT NULL COMMENT '地区',
   `birthday` varchar(255) NOT NULL COMMENT '生日',
+  `realname` int(11) NOT NULL DEFAULT '0' COMMENT '是否实名默认0 实名1',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $userId 自增id
@@ -56,12 +57,13 @@ use Imi\Model\Annotation\Entity;
  * @property int $randId 用户随机id
  * @property int $wealthvalue 财富值
  * @property int $charmvalue 魅力值
- * @property int $balance 
+ * @property int $balance 账户余额
  * @property int $status 
  * @property int $sex 1男 2 女 3未定义
  * @property string $autograph 签名
  * @property string $region 地区
  * @property string $birthday 生日
+ * @property int $realname 是否实名默认0 实名1
  */
 abstract class UserBase extends Model
 {
@@ -588,6 +590,7 @@ abstract class UserBase extends Model
     }
 
     /**
+     * 账户余额
      * balance
      * @Column(name="balance", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var int
@@ -595,7 +598,7 @@ abstract class UserBase extends Model
     protected $balance;
 
     /**
-     * 获取 balance
+     * 获取 balance - 账户余额
      *
      * @return int
      */ 
@@ -605,7 +608,7 @@ abstract class UserBase extends Model
     }
 
     /**
-     * 赋值 balance
+     * 赋值 balance - 账户余额
      * @param int $balance balance
      * @return static
      */ 
@@ -756,6 +759,35 @@ abstract class UserBase extends Model
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
+        return $this;
+    }
+
+    /**
+     * 是否实名默认0 实名1
+     * realname
+     * @Column(name="realname", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $realname;
+
+    /**
+     * 获取 realname - 是否实名默认0 实名1
+     *
+     * @return int
+     */ 
+    public function getRealname()
+    {
+        return $this->realname;
+    }
+
+    /**
+     * 赋值 realname - 是否实名默认0 实名1
+     * @param int $realname realname
+     * @return static
+     */ 
+    public function setRealname($realname)
+    {
+        $this->realname = $realname;
         return $this;
     }
 

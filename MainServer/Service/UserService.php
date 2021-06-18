@@ -11,8 +11,8 @@ use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Helper\Helper;
 use ImiApp\MainServer\Model\Follow;
 use ImiApp\MainServer\Model\User;
-use \Imi\JWT\Facade\JWT;
 use ImiApp\MainServer\Model\Wechat;
+use Imi\Aop\Annotation\Inject;
 
 /**
  * Class UserService
@@ -21,6 +21,11 @@ use ImiApp\MainServer\Model\Wechat;
  */
 class UserService
 {
+    /**
+     * @var
+     * @Inject("RoomService")
+     */
+    protected $RoomService;
     /**
      * Date: 2021/5/18
      * Time: 14:32
@@ -52,6 +57,12 @@ class UserService
         $info->setRegion('江苏无锡');
         $info->setAutograph('.....');
         $info->insert();
+        Session::set('user_id', $info->getUserId());
+        //用户注册完成之后注册默认直播间
+        $cover='https://hagougou.oss-cn-shanghai.aliyuncs.com/uplaod/image/20210602/5484f80d6b6a5ce47582760a1e4a08b30fc04fcb.png';
+        $eception='欢迎来到直播间';
+        $welcome='欢迎欢迎热烈欢迎';
+        $this->RoomService->setRoom($randid,'新手用户'.$randid,$cover,$eception,$welcome,$info->getUserId());
     }
 
     /**
@@ -94,7 +105,6 @@ class UserService
     public function wxlogin(string $phone, string $ip, string $wxdata)
     {
         $wxdata = json_decode($wxdata, true);
-        var_dump($wxdata);
         $info = $this->getByOpenid('wxopenid', $wxdata['openId']);
         if ($info) {
             $this->setUserLoginInfo($ip, $info->getUserId());
@@ -228,7 +238,7 @@ class UserService
      */
     public function getUserInfo(int $id)
     {
-        $info = User::find(['user_id' => $id]);
+        $info = User::find($id);
 
         return $info;
 

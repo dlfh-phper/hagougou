@@ -56,16 +56,15 @@ class RoomController extends SingletonHttpController
         int $roomnumber,
         string $title,
         string $cover,
-        string $label,
-        string $introduce,
         string $eception,
         string $welcome,
+        string $label,
+        string $introduce ,
         string $blacklist,
-        string $password,
-        int $isPush=0
+        string $password ,
+        int $isPush
     ){
-        $uid=$this->UserSessionService->getUserId();
-        $this->RoomService->setRoom($roomnumber,$title,$cover,$label,$introduce,$eception,$welcome,$blacklist,$password,$isPush,$uid);
+        $this->RoomService->setRoom($roomnumber,$title,$cover,$eception,$welcome,Session::get('user_id'),$label,$introduce,$blacklist,$password,$isPush);
     }
 
     /**
@@ -93,6 +92,7 @@ class RoomController extends SingletonHttpController
      */
     public function getRoominfo()
     {
+        var_dump(Session::get('user_id'));
         return [
           'data'=>$this->RoomService->getRoomInfo(Session::get('user_id'))
         ];
