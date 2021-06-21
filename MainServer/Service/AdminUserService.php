@@ -103,4 +103,22 @@ class AdminUserService
             throw new BusinessException('ID为'.$admin_id.'的管理员不存在');
         }
     }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 9:51
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     * 管理员列表
+     */
+    public function getAdminUserList(int $page,int $page_size)
+    {
+        $list=Adminuser::query()->page($page,$page_size)->order('admin_id','desc')->select()->getArray();
+        $count=Adminuser::count();
+        return [
+            'list' => $list,
+            'count' => $count
+        ];
+    }
 }

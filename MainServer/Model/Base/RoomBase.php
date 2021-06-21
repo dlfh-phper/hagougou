@@ -14,21 +14,22 @@ use Imi\Model\Annotation\Entity;
  * @DDL("CREATE TABLE `room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `roomnumber` int(11) NOT NULL COMMENT '房间号',
-  `start_time` int(11) NOT NULL COMMENT '开始时间',
-  `stop_time` int(11) NOT NULL COMMENT '结束时间',
+  `start_time` int(11) DEFAULT NULL COMMENT '开始时间',
+  `stop_time` int(11) DEFAULT NULL COMMENT '结束时间',
   `user_id` int(11) NOT NULL COMMENT '开播人',
   `title` varchar(255) NOT NULL COMMENT '标题',
   `giftvalue` int(11) DEFAULT '0' COMMENT '房间热度',
   `isStop` int(11) DEFAULT '0' COMMENT '0关闭 1开始',
   `countvalue` int(11) NOT NULL DEFAULT '0' COMMENT '总热度',
   `cover` varchar(255) NOT NULL COMMENT '封面图',
-  `label` varchar(255) NOT NULL COMMENT '标签',
+  `label` varchar(255) DEFAULT NULL COMMENT '标签',
   `introduce` varchar(255) NOT NULL COMMENT '简介',
   `password` varchar(255) DEFAULT NULL COMMENT '密码',
   `eception` varchar(255) NOT NULL COMMENT '接待语',
   `welcome` varchar(255) NOT NULL COMMENT '欢迎语',
-  `blacklist` varchar(255) NOT NULL COMMENT '黑名单列表',
+  `blacklist` varchar(255) DEFAULT NULL COMMENT '黑名单列表',
   `isPush` int(11) NOT NULL DEFAULT '0' COMMENT '0不推送 2推送',
+  `bulletin` text COMMENT '公告',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $id 
@@ -48,6 +49,7 @@ use Imi\Model\Annotation\Entity;
  * @property string $welcome 欢迎语
  * @property string $blacklist 黑名单列表
  * @property int $isPush 0不推送 2推送
+ * @property string $bulletin 公告
  */
 abstract class RoomBase extends Model
 {
@@ -111,7 +113,7 @@ abstract class RoomBase extends Model
     /**
      * 开始时间
      * start_time
-     * @Column(name="start_time", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="start_time", type="int", length=11, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var int
      */
     protected $startTime;
@@ -140,7 +142,7 @@ abstract class RoomBase extends Model
     /**
      * 结束时间
      * stop_time
-     * @Column(name="stop_time", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="stop_time", type="int", length=11, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var int
      */
     protected $stopTime;
@@ -343,7 +345,7 @@ abstract class RoomBase extends Model
     /**
      * 标签
      * label
-     * @Column(name="label", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="label", type="varchar", length=255, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var string
      */
     protected $label;
@@ -488,7 +490,7 @@ abstract class RoomBase extends Model
     /**
      * 黑名单列表
      * blacklist
-     * @Column(name="blacklist", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="blacklist", type="varchar", length=255, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var string
      */
     protected $blacklist;
@@ -540,6 +542,35 @@ abstract class RoomBase extends Model
     public function setIsPush($isPush)
     {
         $this->isPush = $isPush;
+        return $this;
+    }
+
+    /**
+     * 公告
+     * bulletin
+     * @Column(name="bulletin", type="text", length=0, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $bulletin;
+
+    /**
+     * 获取 bulletin - 公告
+     *
+     * @return string
+     */ 
+    public function getBulletin()
+    {
+        return $this->bulletin;
+    }
+
+    /**
+     * 赋值 bulletin - 公告
+     * @param string $bulletin bulletin
+     * @return static
+     */ 
+    public function setBulletin($bulletin)
+    {
+        $this->bulletin = $bulletin;
         return $this;
     }
 

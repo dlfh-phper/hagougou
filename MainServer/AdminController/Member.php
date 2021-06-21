@@ -29,7 +29,11 @@ class Member extends SingletonHttpController
      * @Inject("UserService");
      */
     protected $UserService;
-
+    /**
+     * @var
+     * @Inject("AdminUserService");
+     */
+    protected $AdminUserService;
     /**
      * Date: 2021/6/3
      * Time: 14:37
@@ -80,6 +84,22 @@ class Member extends SingletonHttpController
     {
         return [
             'data' => $this->UserService->setMemberStatus($user_id,$status)
+        ];
+    }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 9:47
+     * @Action
+     * @Route(method="POST")
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public function getAdminUserList(int $page,int $page_size)
+    {
+        return [
+            'data' => $this->AdminUserService->getAdminUserList($page,$page_size)
         ];
     }
 }

@@ -92,7 +92,6 @@ class RoomController extends SingletonHttpController
      */
     public function getRoominfo()
     {
-        var_dump(Session::get('user_id'));
         return [
           'data'=>$this->RoomService->getRoomInfo(Session::get('user_id'))
         ];
@@ -123,6 +122,35 @@ class RoomController extends SingletonHttpController
     {
         return [
           'data' => $this->ApiService->genUserSig(Session::get('user_id'))
+        ];
+    }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 11:02
+     * @Action
+     * @Route(method="POST")
+     * @param int $roomnumber
+     * @param string $bulletin
+     * 设置直播间公告栏
+     */
+    public function setBulletin(int $roomnumber, string $bulletin)
+    {
+        $this->RoomService->setBulletin($roomnumber,$bulletin,Session::get('user_id'));
+    }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 14:25
+     * @Action
+     * @Route(method="POST")
+     * @param int $roomnumber
+     * @return mixed
+     */
+    public function RoomInfo(int $roomnumber)
+    {
+        return  [
+          'data' =>  $this->RoomService->RoomInfo($roomnumber)
         ];
     }
 }

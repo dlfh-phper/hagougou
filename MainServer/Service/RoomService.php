@@ -5,6 +5,7 @@ namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
 use ImiApp\MainServer\Exception\BusinessException;
+use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Model\Room;
 use ImiApp\MainServer\Model\Rootlabel;
 
@@ -191,5 +192,41 @@ class RoomService
         $room = Room::find(['user_id' => $uid]);
 
         return $room->getBlacklist();
+    }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 11:08
+     * @param int $roomnumber
+     * @param string $bulletin
+     * @param int $uid
+     * @throws NotFoundException
+     * 设置公告栏
+     */
+    public function setBulletin(int $roomnumber, string $bulletin,int $uid)
+    {
+        $room = Room::find([
+            'roomnumber' => $roomnumber,
+            'uid' => $uid
+        ]);
+        if($room){
+            $room->setBulletin($bulletin);
+            $room->update();
+        }else{
+            throw new NotFoundException(sprintf('房间号为 %s 直播间不存在',$roomnumber));
+
+        }
+    }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 14:26
+     * @param int $roomnumber
+     * @return Room|null
+     * 获取直播间信息
+     */
+    public function RoomInfo(int $roomnumber)
+    {
+        return $room = Room::find(['roomnumber' => $roomnumber]);
     }
 }
