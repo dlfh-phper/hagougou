@@ -4,6 +4,7 @@
 namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
+use ImiApp\MainServer\Model\Intimacy;
 use ImiApp\MainServer\Model\User;
 
 /**
@@ -26,11 +27,34 @@ class RankingService
      */
     public function RankingService(int $page,int $page_size)
     {
-        $list['intimacyvalue'] = User::Query()->order('intimacyvalue', 'desc')->page($page,$page_size)->select()->getArray();
-        $list['wealthvalue'] = User::Query()->order('wealthvalue', 'desc')->page($page,$page_size)->select()->getArray();
-        $list['charmvalue'] = User::Query()->order('charmvalue', 'desc')->page($page,$page_size)->select()->getArray();
-        $list['cpvalue'] = User::Query()->order('cpvalue', 'desc')->page($page,$page_size)->select()->getArray();
-        $list['count'] = User::count();
+        $count=User::count();
+        //亲密
+        $list['intimacyvalue'] =self::intimacy($page,$page_size);
+        //财富
+        $wealthvalue=[
+            'list' => User::Query()->order('wealthvalue', 'desc')->page($page,$page_size)->select()->getArray(),
+            'count' => $count
+            ];
+        $list['wealthvalue'] =$wealthvalue;
+        //魅力
+        $charmvalue=[
+            'list' => User::Query()->order('charmvalue', 'desc')->page($page,$page_size)->select()->getArray(),
+            'count' => $count
+        ];
+        $list['charmvalue'] =$charmvalue;
+        //cp
+        $list['cpvalue'] = self::cp($page,$page_size);
         return $list;
+    }
+    public static function intimacy($page,$page_size)
+    {
+        return [
+            'list' => Intimacy::query()->order('countvalue','desc')->page($page,$page_size)->select()->getArray(),
+            'count' => Intimacy::count()
+        ];
+    }
+    public static function cp($page,$page_size)
+    {
+         return 0;
     }
 }

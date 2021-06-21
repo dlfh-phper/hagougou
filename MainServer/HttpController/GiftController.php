@@ -34,10 +34,38 @@ class GiftController
      * @Action
      * @Route(method="POST")
      * @param int $shop_id
-     * 购买礼物
+     * 装扮
      */
     public function PurchaseGift(int $shop_id)
     {
         $this->GiftService->PurchaseGift($shop_id,Session::get('user_id'));
     }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 16:24
+     * @Action
+     * @Route(method="POST")
+     * @param int $shop_id
+     * @param int $accept_id
+     * 赠送亲密礼物
+     */
+    public function GiveIntimacyGift(int $shop_id,int $accept_id)
+    {
+        $this->GiftService->GiveIntimacyGift($shop_id,$accept_id,Session::get('user_id'));
+    }
+
+//    /**
+//     * Date: 2021/6/21
+//     * Time: 16:24
+//     * @Action
+//     * @Route(method="POST")
+//     * @param int $shop_id
+//     * @param int $accept_id
+//     * 赠送cp礼物
+//     */
+//    public function GiveCpGift(int $shop_id,int $accept_id)
+//    {
+//        $this->GiftService->GiveCpGift($shop_id,$accept_id,Session::get('user_id'));
+//    }
 }

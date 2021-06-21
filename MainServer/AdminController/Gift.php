@@ -72,4 +72,20 @@ class Gift extends SingletonHttpController
     {
         $this->GiftService->deleteGift($id);
     }
+
+    /**
+     * Date: 2021/6/21
+     * Time: 14:50
+     * @Action
+     * @Route(method="POST")
+     * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
+     * @Required(name="url", message="头像框不能为空")
+     * @Required(name="price", message="价格不能为空")
+     * @param string $url
+     * @param int $price
+     */
+    public function setHeadFrame(string $url, int $price)
+    {
+        $this->GiftService->setHeadFrame($url,$price);
+    }
 }
