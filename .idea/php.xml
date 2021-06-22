@@ -36,6 +36,7 @@
       <path value="$PROJECT_DIR$/vendor/easyswoole/utility" />
       <path value="$PROJECT_DIR$/vendor/easyswoole/http-client" />
       <path value="$PROJECT_DIR$/vendor/easyswoole/spl" />
+      <path value="$PROJECT_DIR$/vendor/tencent/tls-sig-api-v2" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1">

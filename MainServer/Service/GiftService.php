@@ -5,6 +5,7 @@ namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
 use ImiApp\MainServer\Exception\BusinessException;
+use ImiApp\MainServer\Model\Cp;
 use ImiApp\MainServer\Model\Dressup;
 use ImiApp\MainServer\Model\Gift;
 use ImiApp\MainServer\Model\GiveCpgiftLog;
@@ -14,6 +15,7 @@ use ImiApp\MainServer\Model\Intimacy;
 use ImiApp\MainServer\Model\Knapsack;
 use Imi\Db\Annotation\Transaction;
 use ImiApp\MainServer\Model\User;
+use Imi\Aop\Annotation\Inject;
 
 /**
  * Class GiftService
@@ -22,6 +24,11 @@ use ImiApp\MainServer\Model\User;
  */
 class GiftService
 {
+    /**
+     * @var
+     * @Inject("UserService")
+     */
+    protected $UserService;
     /**
      * Date: 2021/6/17
      * Time: 15:43
@@ -119,39 +126,75 @@ class GiftService
     /**
      * Date: 2021/6/21
      * Time: 16:25
-     * @Transactio
      * @param int $shop_id
      * @param int $accept_id
      * @param int $uid
-     * 赠送亲密礼物
+     * @Transaction
+     * 曾送礼物增加亲密度
+     * 赠送礼物的前置判断
      */
     public function GiveIntimacyGift(int $shop_id,int $accept_id,int $uid)
     {
-        //加入送礼物记录
-        $price=Gift::find($shop_id)->getPrice();
-        GiveGiftLog::newInstance()
-            ->setUid($uid)
-            ->setShopId($shop_id)
-            ->setAcceptId($accept_id)
-            ->setAddTime(time())
-            ->setPrice($price);
-        //增加亲密度
+
+        $Gift=Gift::find($shop_id);
+        $price=$Gift->getPrice();
+        //查找作为主动送礼物的存不存在
         $find=Intimacy::find([
             'give_id' => $uid,
             'accept_id' => $accept_id
         ]);
+        //查找作为接受礼物的人存不存在
+        $info=Intimacy::find([
+            'give_id' => $accept_id,
+            'accept_id' => $uid
+        ]);
+        if($Gift->getType()==3){
+            if($find->getCountvalue()=='1000' or $info->getCountvalue()=='1000'){
+                $cp1=Cp::find([
+                    'give_id' => $uid,
+                    'accept_id' => $accept_id
+                ]);
+                $cp2=Cp::find([
+                    'give_id' => $accept_id,
+                    'accept_id' => $uid
+                ]);
+                if($cp1->getIsAgree()==1){
+                    throw new BusinessException('您已经绑定cp');
+                }
+                if($cp2->getIsAgree()==1){
+                    throw new BusinessException('您要赠送的人已经绑定cp');
+                }
+                $this->SendCpGift($shop_id,$accept_id,$uid,$price,$Gift);
+            }else{
+                throw new BusinessException('告白值不够,请先赠送告白礼物增加告白礼物');
+            }
+        }
+        $this->SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift);
         //信息存在说明首先像是对方赠送礼物,直接增加礼物值
+
+    }
+
+    /**
+     * Date: 2021/6/22
+     * Time: 16:28
+     * @param $shop_id
+     * @param $accept_id
+     * @param $uid
+     * @param $find
+     * @param $info
+     * @param $price
+     * @param $Gift
+     * 赠送告白值
+     */
+    protected function SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift)
+    {
         if($find){
             $find->setCountvalue($find->getCountvalue()+$price);
             $find->update();
         }else{
-            //查找作为接受礼物的人存不存在
-            $info=Intimacy::find([
-                'give_id' => $accept_id,
-                'accept_id' => $uid
-            ]);
+            //作为主栋送礼物的如存在在判断被动接受礼物的存不存在
             if($info){
-                $info->setCountvalue($find->getCountvalue()+$price);
+                $info->setCountvalue($info->getCountvalue()+$price);
                 $info->update();
             }else{
                 //如果既不是主动赠送礼物又不是接受礼物的，直接认为主动赠送礼物存入
@@ -162,8 +205,50 @@ class GiftService
                     ->insert();
             }
         }
+        //加入送礼物记录
+        GiveGiftLog::newInstance()
+            ->setUid($uid)
+            ->setShopId($shop_id)
+            ->setAcceptId($accept_id)
+            ->setAddTime(time())
+            ->setPrice($price);
+        $this->ReduceUserBalance($uid,$Gift);
     }
 
+    /**
+     * Date: 2021/6/22
+     * Time: 16:28
+     * @param $shop_id
+     * @param $accept_id
+     * @param $uid
+     * @param $price
+     * @param $Gift
+     * 赠送cp礼物实际操作
+     */
+    protected function SendCpGift($shop_id,$accept_id,$uid,$price,$Gift)
+    {
+        Cp::newInstance()
+            ->setGiveId($uid)
+            ->setShopId($shop_id)
+            ->setAcceptId($accept_id)
+            ->setCountvalue($price)
+            ->setAddTime(time())
+            ->insert();
+        $this->ReduceUserBalance($uid,$Gift);
+    }
+    /**
+     * Date: 2021/6/22
+     * Time: 16:09
+     * 减少用户财富值
+     */
+    protected  function ReduceUserBalance($uid,$Gift)
+    {
+
+        $this->UserService->getUserInfo($uid)
+            ->setBalance(
+                $this->UserService->getUserInfo($uid)->getBalance() - $Gift->getPrice()
+            )->update();
+    }
 //    public function GiveCpGift(int $shop_id,int $accept_id,int $uid)
 //    {
 //        $cp1=Intimacy::find([
