@@ -150,6 +150,20 @@ class GiftService
         ]);
         if($Gift->getType()==3){
             if($find->getCountvalue()=='1000' or $info->getCountvalue()=='1000'){
+                $isCp1=Cp::find([
+                    'give_id' => $uid,
+                    'isAgree' =>1
+                ]);
+                $isCp2=Cp::find([
+                    'accept_id' => $accept_id,
+                    'isAgree' =>1
+                ]);
+                if($isCp1){
+                    throw new BusinessException('您已经绑定cp');
+                }
+                if($isCp2){
+                    throw new BusinessException('您邀请的人的已经绑定cp');
+                }
                 $cp1=Cp::find([
                     'give_id' => $uid,
                     'accept_id' => $accept_id
@@ -158,13 +172,15 @@ class GiftService
                     'give_id' => $accept_id,
                     'accept_id' => $uid
                 ]);
-                if($cp1->getIsAgree()==1){
-                    throw new BusinessException('您已经绑定cp');
+                //cp1 ==1 或 cp2 == 1 证明两个人是cp可以送礼物
+                if($cp1->getIsAgree()==1 or $cp2->getIsAgree()==1){
+                    $this->SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift);
                 }
-                if($cp2->getIsAgree()==1){
-                    throw new BusinessException('您要赠送的人已经绑定cp');
+                //cp1 == ‘’ and cp2 ==‘’ 证明两人都没有cp 赠送礼物就成了发送一条邀请
+                if(empty($cp1) && empty($cp2)){
+                    $this->SendCpGift($shop_id,$accept_id,$uid,$price,$Gift);
                 }
-                $this->SendCpGift($shop_id,$accept_id,$uid,$price,$Gift);
+
             }else{
                 throw new BusinessException('告白值不够,请先赠送告白礼物增加告白礼物');
             }
