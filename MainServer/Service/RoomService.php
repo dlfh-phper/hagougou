@@ -6,6 +6,7 @@ namespace ImiApp\MainServer\Service;
 use Imi\Bean\Annotation\Bean;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
+use ImiApp\MainServer\Model\Gift;
 use ImiApp\MainServer\Model\Room;
 use ImiApp\MainServer\Model\Rootlabel;
 
@@ -228,5 +229,21 @@ class RoomService
     public function RoomInfo(int $roomnumber)
     {
         return $room = Room::find(['roomnumber' => $roomnumber]);
+    }
+
+    /***
+     * Date: 2021/6/23
+     * Time: 10:39
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     * 直播间礼物
+     */
+    public function getRoomGft(int $page,int $page_size)
+    {
+        return [
+            'list' => Gift::query()->page($page,$page_size)->where('type','=','1')->order('id','desc')->select()->getArray(),
+            'count' => Gift::query()->where('type','=','1')->select()->getRowCount()
+        ];
     }
 }

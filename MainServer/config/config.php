@@ -16,6 +16,7 @@ return [
         'ImiApp\MainServer\Service',
         'ImiApp\MainServer\Model',
         'ImiApp\MainServer\AdminController',
+        'ImiApp\MainServer\Cron',
     ],
     'beans'    =>    [
         'SessionManager'    =>    [

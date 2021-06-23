@@ -130,4 +130,18 @@ class UserController extends SingletonHttpController
     {
         $this->UserService->setUserinfo($nickname,$head,$sex,$autograph,$region,$birthday,Session::get('user_id'));
     }
+
+    /**
+     * Date: 2021/6/23
+     * Time: 14:00
+     * @Action
+     * @Route(method="POST")
+     * @return array
+     */
+    public function UidgetUserinfo($uid)
+    {
+        return [
+            'data' => $this->UserService->getUserInfo($uid),
+        ];
+    }
 }

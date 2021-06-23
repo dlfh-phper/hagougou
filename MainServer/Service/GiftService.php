@@ -12,6 +12,7 @@ use ImiApp\MainServer\Model\GiveCpgiftLog;
 use ImiApp\MainServer\Model\GiveGiftLog;
 use ImiApp\MainServer\Model\Headframe;
 use ImiApp\MainServer\Model\Intimacy;
+use ImiApp\MainServer\Model\Jiyou;
 use ImiApp\MainServer\Model\Knapsack;
 use Imi\Db\Annotation\Transaction;
 use ImiApp\MainServer\Model\User;
@@ -175,14 +176,36 @@ class GiftService
                 //cp1 ==1 或 cp2 == 1 证明两个人是cp可以送礼物
                 if($cp1->getIsAgree()==1 or $cp2->getIsAgree()==1){
                     $this->SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift);
+                    //增加cp值
+                    $this->IncreaseCpValue($cp1,$cp2,$uid,$accept_id,$price);
                 }
                 //cp1 == ‘’ and cp2 ==‘’ 证明两人都没有cp 赠送礼物就成了发送一条邀请
                 if(empty($cp1) && empty($cp2)){
+                    //增加告白值
                     $this->SendCpGift($shop_id,$accept_id,$uid,$price,$Gift);
                 }
-
             }else{
                 throw new BusinessException('告白值不够,请先赠送告白礼物增加告白礼物');
+            }
+        }
+        if($Gift->getType()==6){
+            $Jiyou1=Jiyou::find([
+                'give_id' => $uid,
+                'accept_id' => $accept_id
+            ]);
+            $Jiyou2=Jiyou::find([
+                'give_id' => $accept_id,
+                'accept_id' => $uid
+            ]);
+            //cp1 ==1 或 cp2 == 1 证明两个人是cp可以送礼物
+            if(!empty($Jiyou1)==1 or !empty($Jiyou2)){
+                $this->SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift);
+                //增加cp值
+                $this->IncreaseJyValue($Jiyou1,$Jiyou2,$uid,$accept_id,$price);
+            }
+            //俩人都不存在加入
+            if(empty($Jiyou1) && empty($Jiyou2)){
+                $this->SendJyGift($shop_id,$accept_id,$uid,$price,$Gift);
             }
         }
         $this->SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift);
@@ -200,7 +223,7 @@ class GiftService
      * @param $info
      * @param $price
      * @param $Gift
-     * 赠送告白值
+     * 赠送礼物，增加告白值
      */
     protected function SendGift($shop_id,$accept_id,$uid,$find,$info,$price,$Gift)
     {
@@ -227,7 +250,8 @@ class GiftService
             ->setShopId($shop_id)
             ->setAcceptId($accept_id)
             ->setAddTime(time())
-            ->setPrice($price);
+            ->setPrice($price)
+            ->insert();
         $this->ReduceUserBalance($uid,$Gift);
     }
 
@@ -251,6 +275,60 @@ class GiftService
             ->setAddTime(time())
             ->insert();
         $this->ReduceUserBalance($uid,$Gift);
+    }
+
+    /**
+     * Date: 2021/6/23
+     * Time: 14:31
+     * @param $cp1
+     * @param $cp2
+     * @param $price
+     * 增加cp值
+     */
+    protected function IncreaseCpValue($cp1,$cp2,$price)
+    {
+        if(!empty($cp1)){
+            $cp1->setCountvalue($cp1->getCountvalue() + $price)->update;
+        }
+        if(!empty($cp2))
+        {
+            $cp1->setCountvalue($cp1->getCountvalue() + $price)->update;
+        }
+    }
+
+    /**
+     * Date: 2021/6/23
+     * Time: 15:29
+     * 成为基友
+     */
+    protected function SendJyGift($shop_id,$accept_id,$uid,$price,$Gift)
+    {
+        Jiyou::newInstance()
+            ->setGiveId($uid)
+            ->setShopId($shop_id)
+            ->setAcceptId($accept_id)
+            ->setCountvalue($price)
+            ->setAddTime(time())
+            ->insert();
+        $this->ReduceUserBalance($uid,$Gift);
+    }
+    /**
+     * Date: 2021/6/23
+     * Time: 14:31
+     * @param $cp1
+     * @param $cp2
+     * @param $price
+     * 增加基友值
+     */
+    protected function IncreaseJyValue($Jiyou1,$Jiyou2,$price)
+    {
+        if(!empty($Jiyou1)){
+            $Jiyou1->setCountvalue($Jiyou1->getCountvalue() + $price)->update;
+        }
+        if(!empty($Jiyou2))
+        {
+            $Jiyou2->setCountvalue($Jiyou2->getCountvalue() + $price)->update;
+        }
     }
     /**
      * Date: 2021/6/22

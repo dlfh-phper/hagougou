@@ -48,7 +48,7 @@ class GiftController
      * @Route(method="POST")
      * @param int $shop_id
      * @param int $accept_id
-     * 赠送亲密礼物
+     * 赠送礼物
      */
     public function GiveIntimacyGift(int $shop_id,int $accept_id)
     {

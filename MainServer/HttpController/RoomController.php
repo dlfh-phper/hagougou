@@ -153,4 +153,20 @@ class RoomController extends SingletonHttpController
           'data' =>  $this->RoomService->RoomInfo($roomnumber)
         ];
     }
+
+    /**
+     * Date: 2021/6/23
+     * Time: 10:39
+     * @Action
+     * @Route(method="POST")
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public function getRoomGft(int $page,int $page_size)
+    {
+        return [
+          'data' => $this->RoomService->getRoomGft($page,$page_size)
+        ];
+    }
 }
