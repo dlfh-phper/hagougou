@@ -10,6 +10,8 @@ use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Helper\Helper;
 use ImiApp\MainServer\Model\Follow;
+use ImiApp\MainServer\Model\Headframe;
+use ImiApp\MainServer\Model\Intimacy;
 use ImiApp\MainServer\Model\User;
 use ImiApp\MainServer\Model\Wechat;
 use Imi\Aop\Annotation\Inject;
@@ -238,8 +240,10 @@ class UserService
      */
     public function getUserInfo(int $id)
     {
-        $info = User::find($id);
+        $info = User::find($id)->toArray();
 
+        $info['Intimacy']=$this->getIntimacy($id);
+        $info['headkuang'] = Headframe::find($info['headkuang']);
         return $info;
 
     }
@@ -338,5 +342,22 @@ class UserService
         $info->setRegion($region);
         $info->setBirthday($birthday);
         $info->update();
+    }
+
+    /**
+     * Date: 2021/6/23
+     * Time: 16:23
+     * @param int $uid
+     * @return mixed
+     * 获取用户亲密关系并按照从大到小排行
+     */
+    public function getIntimacy(int $uid)
+    {
+        $intimacy1=Intimacy::find(['give_id'=>$uid])->toArray();
+        $intimacy2=Intimacy::find(['accept_id'=>$uid])->toArray();
+        $array=$intimacy1 +  $intimacy2;
+        $cmf_arr = array_column($array, 'countvalue');
+        array_multisort($cmf_arr, SORT_REGULAR, $cmf_settings);
+        return $cmf_settings;
     }
 }
