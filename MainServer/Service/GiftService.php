@@ -73,7 +73,7 @@ class GiftService
      * 删除礼物
      * @param int $id
      */
-    public function deleteGift(int $id)
+    public function deleteGift(string $id)
     {
         $idlist = explode(',', $id);
         Gift::query()->whereIn('id', $idlist)->delete();
@@ -333,7 +333,7 @@ class GiftService
     /**
      * Date: 2021/6/22
      * Time: 16:09
-     * 减少用户财富值
+     * 减少用户余额正增加财富
      */
     protected  function ReduceUserBalance($uid,$Gift)
     {
@@ -341,7 +341,7 @@ class GiftService
         $this->UserService->getUserInfo($uid)
             ->setBalance(
                 $this->UserService->getUserInfo($uid)->getBalance() - $Gift->getPrice()
-            )->update();
+            )->setWealthvalue($this->UserService->getUserInfo($uid)->getBalance() + $Gift->getPrice())->update();
     }
 //    public function GiveCpGift(int $shop_id,int $accept_id,int $uid)
 //    {

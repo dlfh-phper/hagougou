@@ -63,7 +63,7 @@ class UserService
         //用户注册完成之后注册默认直播间
         $cover='https://hagougou.oss-cn-shanghai.aliyuncs.com/uplaod/image/20210602/5484f80d6b6a5ce47582760a1e4a08b30fc04fcb.png';
         $eception='欢迎来到直播间';
-        $welcome='欢迎欢迎热烈欢迎';
+        $welcome=null;
         $this->RoomService->setRoom($randid,'新手用户'.$randid,$cover,$eception,$welcome,$info->getUserId());
     }
 
@@ -240,7 +240,7 @@ class UserService
      */
     public function getUserInfo(int $id)
     {
-        $info = User::find($id)->toArray();
+        $info = User::find($id);
 
         $info['Intimacy']=$this->getIntimacy($id);
         $info['headkuang'] = Headframe::find($info['headkuang']);
@@ -353,11 +353,26 @@ class UserService
      */
     public function getIntimacy(int $uid)
     {
-        $intimacy1=Intimacy::find(['give_id'=>$uid])->toArray();
-        $intimacy2=Intimacy::find(['accept_id'=>$uid])->toArray();
+        $intimacy1=Intimacy::find(['give_id'=>$uid]);
+        if(!empty($intimacy1)){
+            $intimacy1->toArray();
+        }
+        $intimacy2=Intimacy::find(['accept_id'=>$uid]);
+        if(!empty($intimacy2)) {
+            $intimacy2->toArray();
+        }
         $array=$intimacy1 +  $intimacy2;
+        if(empty($array)){
+            return '';
+        }
         $cmf_arr = array_column($array, 'countvalue');
         array_multisort($cmf_arr, SORT_REGULAR, $cmf_settings);
         return $cmf_settings;
+    }
+    public function testWhere($rand,$name)
+    {
+//        $where['rand_id'] = $rand;
+        $where['nickname'] = ['like',"%$rand%"];
+        return User::query()->whereEx($where)->select()->getSql();
     }
 }

@@ -68,7 +68,7 @@ class Gift extends SingletonHttpController
      * @Route(method="POST")
      * @Middleware(\ImiApp\MainServer\Middleware\AdminJurisdiction::class)
      */
-    public function deleteGift(int $id)
+    public function deleteGift(string $id)
     {
         $this->GiftService->deleteGift($id);
     }

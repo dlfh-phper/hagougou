@@ -144,4 +144,20 @@ class UserController extends SingletonHttpController
             'data' => $this->UserService->getUserInfo($uid),
         ];
     }
+
+    /**
+     * Date: 2021/6/24
+     * Time: 16:34
+     * @Action
+     * @Route(method="POST")
+     * @param $rand
+     * @param $name
+     * @return array
+     */
+    public function testWhere($rand,$name)
+    {
+        return [
+            'data' => $this->UserService->testWhere($rand,$name)
+        ];
+    }
 }

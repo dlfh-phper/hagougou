@@ -8,7 +8,9 @@ use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
 use ImiApp\MainServer\Model\Gift;
 use ImiApp\MainServer\Model\Room;
+use ImiApp\MainServer\Model\Roomblack;
 use ImiApp\MainServer\Model\Rootlabel;
+use Imi\Aop\Annotation\Inject;
 
 /**
  * Class RoomService
@@ -18,6 +20,11 @@ use ImiApp\MainServer\Model\Rootlabel;
 class RoomService
 {
     /**
+     * @var
+     * @Inject("UserService");
+     */
+    protected $UserService;
+    /**
      * Date: 2021/5/19
      * Time: 11:38
      * @return array
@@ -25,8 +32,10 @@ class RoomService
      */
     public function indexRoom()
     {
-        $info = Room::query()->order('giftvalue', 'desc')->limit(6)->select()->getArray();
-
+        $info = Room::dbQuery()->order('giftvalue', 'desc')->limit(6)->select()->getArray();
+        foreach ($info as $key=>$value){
+            $info[$key]['black']=$this->getRoomBlacklistInfo($value['roomnumber']);
+        }
         return $info;
     }
 
@@ -112,13 +121,13 @@ class RoomService
         string $title,
         string $cover,
         string $eception,
-        string $welcome,
+        string $welcome = null,
         int $uid,
         string $label = '',
         string $introduce = '',
-        string $blacklist = '',
-        string $password = '',
+        string $password = null,
         int $isPush = 0
+
     ) {
         try {
             $info = Room::find(['roomnumber' => $roomnumber]);
@@ -134,7 +143,6 @@ class RoomService
             $room->setIntroduce($introduce);
             $room->setEception($eception);
             $room->setWelcome($welcome);
-            $room->setBlacklist($blacklist);
             $room->setPassword($password);
             $room->setIsPush($isPush);
             $room->setUserId($uid);
@@ -164,8 +172,11 @@ class RoomService
      */
     public function setRoomBlacklist(int $uid, int $roomnumber)
     {
-        $room = Room::find(['roomnumber' => $roomnumber]);
-        $room->setBlacklist($uid);
+        Roomblack::newInstance()
+            ->setUid($uid)
+            ->setRoomnumber($roomnumber)
+            ->setAddTime(time())
+            ->insert();
     }
 
     /**
@@ -177,7 +188,8 @@ class RoomService
      */
     public function getRoomInfo(int $uid)
     {
-        $room = Room::find(['user_id' => $uid]);
+        $room = Room::find(['user_id' => $uid])->toArray();
+        $room['blacklist'] = Roomblack::find(['roomnumber'=>$room['roomnumber']]);
         return $room;
     }
 
@@ -188,11 +200,11 @@ class RoomService
      * @return string
      * 获取房间黑名单信息
      */
-    public function getRoomBlacklistInfo(int $uid)
+    public function getRoomBlacklistInfo(int $roomnumber)
     {
-        $room = Room::find(['user_id' => $uid]);
+        return Roomblack::query()->where('roomnumber','=',$roomnumber)->select()->getArray();
 
-        return $room->getBlacklist();
+
     }
 
     /**
@@ -245,5 +257,40 @@ class RoomService
             'list' => Gift::query()->page($page,$page_size)->where('type','=','1')->order('id','desc')->select()->getArray(),
             'count' => Gift::query()->where('type','=','1')->select()->getRowCount()
         ];
+    }
+
+    /**
+     * Date: 2021/6/24
+     * Time: 15:22
+     * @param string $Search
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     * 黑名单搜索
+     */
+    public function SearchRoomBlack(string $Search,int $page,int $page_size)
+    {
+         $useinfo = $this->UserService->nickNameAndIdSearch($Search,$page,$page_size);
+         $userarry= array_column($useinfo['list'],'user_id');
+         $Black=Roomblack::dbQuery()->whereIn('uid',$userarry)->select()->getArray();
+         foreach ($Black as $key => $value){
+             $Black[$key]=$this->UserService->getUserInfo($value['uid']);
+         }
+         return [
+            'list' => $Black,
+            'count' =>  Roomblack::query()->whereIn('uid',$userarry)->select()->getRowCount()
+         ];
+
+    }
+
+    /**
+     * Date: 2021/6/24
+     * Time: 15:31
+     * @param int $uid
+     * @param string $roomnumber
+     */
+    public function RemoveBlack(int $uid,string $roomnumber)
+    {
+        Roomblack::find(['uid' => $uid,'roomnumber' => $roomnumber])->delete();
     }
 }

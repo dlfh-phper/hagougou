@@ -47,10 +47,6 @@ class RoomController extends SingletonHttpController
      * @Integer(name="roomnumber",mix="1",message="房间号不能为空")
      * @Text(name="title", message="房间标题不能为空")
      * @Text(name="cover", message="房间封面图不能为空")
-     * @Text(name="label", message="标签不能为空")
-     * @Text(name="introduce", message="简介不能为空")
-     * @Text(name="eception", message="接待语不能为空")
-     * @Text(name="welcome", message="欢迎语不能为空")
      */
     public function setRoom(
         int $roomnumber,
@@ -60,11 +56,11 @@ class RoomController extends SingletonHttpController
         string $welcome,
         string $label,
         string $introduce ,
-        string $blacklist,
-        string $password ,
+        string $password,
         int $isPush
+
     ){
-        $this->RoomService->setRoom($roomnumber,$title,$cover,$eception,$welcome,Session::get('user_id'),$label,$introduce,$blacklist,$password,$isPush);
+        $this->RoomService->setRoom($roomnumber,$title,$cover,$eception,$welcome,Session::get('user_id'),$label,$introduce,$password,$isPush);
     }
 
     /**
@@ -104,10 +100,10 @@ class RoomController extends SingletonHttpController
      * @Route(method="POST")
      * @return array
      */
-    public function getRoomBlacklistInfo()
+    public function getRoomBlacklistInfo(string $roomnumber)
     {
         return [
-            'data'=>$this->RoomService->getRoomBlacklistInfo(Session::get('user_id'))
+            'data'=>$this->RoomService->getRoomBlacklistInfo($roomnumber)
         ];
     }
 
@@ -168,5 +164,34 @@ class RoomController extends SingletonHttpController
         return [
           'data' => $this->RoomService->getRoomGft($page,$page_size)
         ];
+    }
+
+    /**
+     * Date: 2021/6/24
+     * Time: 15:23
+     * @Action
+     * @Route(method="POST")
+     * @param string $Search
+     * @param int $page
+     * @param int $page_size
+     */
+    public function SearchRoomBlack(string $Search,int $page,int $page_size)
+    {
+        return [
+            'data' => $this->RoomService->SearchRoomBlack($Search,$page,$page_size)
+        ];
+    }
+
+    /**
+     * Date: 2021/6/24
+     * Time: 15:32
+     * @Action
+     * @Route(method="POST")
+     * @param int $uid
+     * @param int $roomnumber
+     */
+    public function RemoveBlack(int $uid,int $roomnumber)
+    {
+        $this->RoomService->RemoveBlack($uid,$roomnumber);
     }
 }
