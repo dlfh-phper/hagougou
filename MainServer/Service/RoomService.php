@@ -33,9 +33,6 @@ class RoomService
     public function indexRoom()
     {
         $info = Room::dbQuery()->order('giftvalue', 'desc')->limit(6)->select()->getArray();
-        foreach ($info as $key=>$value){
-            $info[$key]['black']=$this->getRoomBlacklistInfo($value['roomnumber']);
-        }
         return $info;
     }
 
@@ -200,10 +197,19 @@ class RoomService
      * @return string
      * 获取房间黑名单信息
      */
-    public function getRoomBlacklistInfo(int $roomnumber)
+    public function getRoomBlacklistInfo(int $roomnumber,int $page,int $page_size)
     {
-        return Roomblack::query()->where('roomnumber','=',$roomnumber)->select()->getArray();
-
+        $list = Roomblack::dbQuery()->page($page,$page_size)->order('id','desc')->where('roomnumber','=',$roomnumber)->select()->getArray();
+        foreach ($list as $key=>$value)
+        {
+            $list[$key]['head'] = $this->UserService->getUserInfo($value['uid'])->getHead();
+            $list[$key]['nickname'] = $this->UserService->getUserInfo($value['uid'])->getNickname();
+        }
+        $count = Roomblack::query()->where('roomnumber','=',$roomnumber)->select()->getRowCount();
+        return  [
+            'list' => $list,
+            'count' => $count
+        ];
 
     }
 

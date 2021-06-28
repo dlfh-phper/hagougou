@@ -100,10 +100,10 @@ class RoomController extends SingletonHttpController
      * @Route(method="POST")
      * @return array
      */
-    public function getRoomBlacklistInfo(string $roomnumber)
+    public function getRoomBlacklistInfo(string $roomnumber,int $page,int $page_size)
     {
         return [
-            'data'=>$this->RoomService->getRoomBlacklistInfo($roomnumber)
+            'data'=>$this->RoomService->getRoomBlacklistInfo($roomnumber,$page,$page_size)
         ];
     }
 

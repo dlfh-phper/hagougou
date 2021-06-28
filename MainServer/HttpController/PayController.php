@@ -59,7 +59,7 @@ class PayController extends SingletonHttpController
     public function apppay(int $price,string $type)
     {
         return [
-            'data' =>$this->PayService->Recharge($price,'1',$type),
+            'data' =>$this->PayService->AppWxRecharge($price,Session::get('user_id'),$type),
         ];
     }
     /**

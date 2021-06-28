@@ -17,10 +17,11 @@ use Imi\Model\Annotation\Entity;
   `uid` int(11) NOT NULL COMMENT '用户id',
   `type` varchar(255) NOT NULL COMMENT 'ios 或 Android',
   `out_trade_no` varchar(255) NOT NULL COMMENT '订单号',
-  `trade_no` varchar(255) NOT NULL COMMENT '平台流水号',
+  `trade_no` varchar(255) DEFAULT NULL COMMENT '平台流水号',
   `status` int(11) NOT NULL COMMENT '1未支付 2已支付',
   `add_time` int(11) NOT NULL COMMENT '发起支付时间',
   `complete_time` int(11) DEFAULT NULL COMMENT '支付完成时间',
+  `pay_route` int(11) NOT NULL COMMENT '1app微信充值 2公众号 3 app支付宝',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $id 
@@ -32,6 +33,7 @@ use Imi\Model\Annotation\Entity;
  * @property int $status 1未支付 2已支付
  * @property int $addTime 发起支付时间
  * @property int $completeTime 支付完成时间
+ * @property int $payRoute 1app微信充值 2公众号 3 app支付宝
  */
 abstract class RechargelogBase extends Model
 {
@@ -182,7 +184,7 @@ abstract class RechargelogBase extends Model
     /**
      * 平台流水号
      * trade_no
-     * @Column(name="trade_no", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @Column(name="trade_no", type="varchar", length=255, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var string
      */
     protected $tradeNo;
@@ -292,6 +294,35 @@ abstract class RechargelogBase extends Model
     public function setCompleteTime($completeTime)
     {
         $this->completeTime = $completeTime;
+        return $this;
+    }
+
+    /**
+     * 1app微信充值 2公众号 3 app支付宝
+     * pay_route
+     * @Column(name="pay_route", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var int
+     */
+    protected $payRoute;
+
+    /**
+     * 获取 payRoute - 1app微信充值 2公众号 3 app支付宝
+     *
+     * @return int
+     */ 
+    public function getPayRoute()
+    {
+        return $this->payRoute;
+    }
+
+    /**
+     * 赋值 payRoute - 1app微信充值 2公众号 3 app支付宝
+     * @param int $payRoute pay_route
+     * @return static
+     */ 
+    public function setPayRoute($payRoute)
+    {
+        $this->payRoute = $payRoute;
         return $this;
     }
 

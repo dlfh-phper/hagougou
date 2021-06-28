@@ -38,6 +38,11 @@ class IndexController extends SingletonHttpController
      */
     protected $RedisService;
     /**
+     * @var
+     * @Inject("AgreementService");
+     */
+    protected $AgreementService;
+    /**
      * @Action
      * @Route(method="POST")
      * @HttpValidation
@@ -126,6 +131,21 @@ class IndexController extends SingletonHttpController
     {
         return [
             'data' => $this->UserService->nickNameAndIdSearch($search,$page,$page_size),
+        ];
+    }
+
+    /**
+     * Date: 2021/6/28
+     * Time: 15:15
+     * @Action
+     * @Route(method="POST")
+     * @param int $type
+     * @return array
+     */
+    public function getAgreement(int $type)
+    {
+        return [
+          'data' => $this->AgreementService->getTypeAgreement($type)
         ];
     }
 }

@@ -70,12 +70,12 @@ class PayService
     /**
      * Date: 2021/6/16
      * Time: 15:06
-     * app充值
+     * app微信充值
      * @param int $price
      * @param int $uid
      * @return \EasySwoole\Pay\WeChat\ResponseBean\App
      */
-    public function Recharge(int $price, int $uid, string $type)
+    public function AppWxRecharge(int $price, int $uid, string $type)
     {
         try {
             if($this->UserService->getUserInfo($uid)->getRealname()==0){
@@ -88,6 +88,7 @@ class PayService
             $info->setAddTime(time());
             $info->setOutTradeNo($out_trade_no);
             $info->setType($type);
+            $info->setPayRoute('1');
             $info->insert();
             $callbackurl = 'https://api.haihaixingqiu.com/pay/RechargeCallbackUrl';
             $wechatConfig = new Config();
@@ -98,7 +99,7 @@ class PayService
             $wechatConfig->setApiClientCert(getcwd().'/cert/apiclient_cert.pem');//客户端证书
             $wechatConfig->setApiClientKey(getcwd().'/cert/apiclient_key.pem'); //客户端证书秘钥
             $app = new \EasySwoole\Pay\WeChat\RequestBean\App();
-            $app->setBody('嗨嗨星球app');
+            $app->setBody('嗨嗨星球app充值');
             $app->setOutTradeNo($out_trade_no);
             $app->setTotalFee($price);
             $app->setSpbillCreateIp('139.196.231.67');
@@ -108,6 +109,22 @@ class PayService
         } catch (BusinessException $bu) {
             throw new BusinessException($bu->getMessage());
         }
+
+    }
+
+    /**
+     * Date: 2021/6/28
+     * Time: 15:56
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public function getRechargeLog(int $page,int $page_size)
+    {
+        return [
+            'list' => Rechargelog::query()->page($page,$page_size)->order('id','desc')->select()->getArray(),
+            'count' => Rechargelog::count()
+        ];
 
     }
 }
