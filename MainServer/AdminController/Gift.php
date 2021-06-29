@@ -56,9 +56,9 @@ class Gift extends SingletonHttpController
      * @Required(name="price", message="价格不能为空")
      * @Required(name="type", message="类型不能为空")
      */
-    public function setGift(string $url,int $price,int $type)
+    public function setGift(string $url,int $price,int $type,string $name,string $cover)
     {
-        $this->GiftService->setGift($url,$price,$type);
+        $this->GiftService->setGift($url,$price,$type,$name,$cover);
     }
 
     /**

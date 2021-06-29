@@ -35,7 +35,7 @@ class Info extends SingletonHttpController
      * @Route(method="POST")
      * @param int $status
      */
-    public function getRportFedback(int $status,int $page,int $page_size)
+    public function getRportFedbackList(int $status,int $page,int $page_size)
     {
         return [
             'data' => $this->RportFedbackService->getReportList($status,$page,$page_size)

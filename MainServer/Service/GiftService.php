@@ -57,13 +57,15 @@ class GiftService
      * @param int $type
      * 设置礼物
      */
-    public function setGift(string $url, int $price, int $type)
+    public function setGift(string $url, int $price, int $type,string $name,string $cover)
     {
         $info = Gift::newInstance();
         $info->setAddTime(time());
         $info->setUrl($url);
         $info->setPrice($price);
         $info->setType($type);
+        $info->setName($name);
+        $info->setCover($cover);
         $info->insert();
     }
 
