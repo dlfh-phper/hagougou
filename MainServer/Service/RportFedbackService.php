@@ -32,7 +32,9 @@ class RportFedbackService
             ->setNickname($nickname)
             ->setUrl($url)
             ->setContent($content)
+            ->setStatus(1)
             ->setType($type)
+            ->setAddTime(time())
             ->insert();
     }
 
@@ -44,11 +46,20 @@ class RportFedbackService
      * @return array
      * 获取举报信息列表
      */
-    public function getReportList(int $page,int $page_size)
+    public function getReportList(int $status,int $page,int $page_size)
     {
         return [
-            'list' => Reportlog::query()->page($page,$page_size)->order('id','desc')->select()->getArray(),
-            'count' => Reportlog::count()
+            'list' => Reportlog::query()->page($page,$page_size)->where('status','=',$status)->order('id','desc')->select()->getArray(),
+            'count' => Reportlog::query()->where('status','=',$status)->select()->getRowCount()
         ];
+    }
+
+    /**
+     * Date: 2021/6/29
+     * Time: 16:07
+     */
+    public function AppFedback(string $content,int $uid)
+    {
+        Reportlog::newInstance()->setStatus(2)->setContent($content)->setUid($uid)->setAddTime(time())->insert();
     }
 }

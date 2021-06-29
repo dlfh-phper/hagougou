@@ -43,4 +43,16 @@ class RportFedbackController extends SingletonHttpController
     {
         $this->RportFedbackService->ReportHarmfulInfo($report_id,$nickname,$url,$content,$type,Session::get('user_id'));
     }
+
+    /**
+     * Date: 2021/6/29
+     * Time: 16:16
+     * @Action
+     * @Route(method="POST")
+     * @param string $content
+     */
+    public function AppFedback(string $content)
+    {
+        $this->RportFedbackService->AppFedback($content,Session::get('user_id'));
+    }
 }
