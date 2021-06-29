@@ -243,7 +243,12 @@ class UserService
         $info = User::find($id);
 
         $info['Intimacy']=$this->getIntimacy($id);
-        $info['headkuang'] = Headframe::find($info['headkuang']);
+        if($info->getHeadkuang()==''){
+            $info['headkuang']='';
+        }else{
+            $info['headkuang'] = Headframe::find()->getUrl() ?? '';
+        }
+
         return $info;
 
     }

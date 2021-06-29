@@ -33,6 +33,7 @@ class Crontab implements ICronTask
             {
                 Db::query()->table('user')
                     ->where('user_id','=',$value['give_id'])
+                    ->setFieldDec('charmvalue',$value['price'])
                     ->setFieldInc('balance',$value['price'])
                     ->update();
                 Db::query()->table('cp')

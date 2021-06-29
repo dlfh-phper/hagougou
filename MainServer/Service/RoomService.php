@@ -4,9 +4,12 @@
 namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
+use Imi\Redis\RedisManager;
 use ImiApp\MainServer\Exception\BusinessException;
 use ImiApp\MainServer\Exception\NotFoundException;
+use ImiApp\MainServer\Model\Contrastroompasswordlog;
 use ImiApp\MainServer\Model\Gift;
+use ImiApp\MainServer\Model\Headframe;
 use ImiApp\MainServer\Model\Room;
 use ImiApp\MainServer\Model\Roomblack;
 use ImiApp\MainServer\Model\Rootlabel;
@@ -204,6 +207,7 @@ class RoomService
         {
             $list[$key]['head'] = $this->UserService->getUserInfo($value['uid'])->getHead();
             $list[$key]['nickname'] = $this->UserService->getUserInfo($value['uid'])->getNickname();
+            $list[$key]['headkuang'] = $this->UserService->getUserInfo($value['uid'])->getHeadkuang();
         }
         $count = Roomblack::query()->where('roomnumber','=',$roomnumber)->select()->getRowCount();
         return  [
@@ -246,7 +250,7 @@ class RoomService
      */
     public function RoomInfo(int $roomnumber)
     {
-        return $room = Room::find(['roomnumber' => $roomnumber]);
+        return  Room::find(['roomnumber' => $roomnumber]);
     }
 
     /***
@@ -274,17 +278,19 @@ class RoomService
      * @return array
      * 黑名单搜索
      */
-    public function SearchRoomBlack(string $Search,int $page,int $page_size)
+    public function SearchRoomBlack(string $Search,int $page,int $page_size,string $roomnumber)
     {
          $useinfo = $this->UserService->nickNameAndIdSearch($Search,$page,$page_size);
          $userarry= array_column($useinfo['list'],'user_id');
-         $Black=Roomblack::dbQuery()->whereIn('uid',$userarry)->select()->getArray();
+         $Black=Roomblack::dbQuery()->where('roomnumber','=',$roomnumber)->whereIn('uid',$userarry)->select()->getArray();
          foreach ($Black as $key => $value){
-             $Black[$key]=$this->UserService->getUserInfo($value['uid']);
+             $Black[$key]['head'] = $this->UserService->getUserInfo($value['uid'])->getHead();
+             $Black[$key]['nickname'] = $this->UserService->getUserInfo($value['uid'])->getNickname();
+             $Black[$key]['headkuang'] = $this->UserService->getUserInfo($value['uid'])->getHeadkuang();
          }
          return [
             'list' => $Black,
-            'count' =>  Roomblack::query()->whereIn('uid',$userarry)->select()->getRowCount()
+            'count' =>  Roomblack::query()->where('roomnumber','=',$roomnumber)->whereIn('uid',$userarry)->select()->getRowCount()
          ];
 
     }
@@ -298,5 +304,43 @@ class RoomService
     public function RemoveBlack(int $uid,string $roomnumber)
     {
         Roomblack::find(['uid' => $uid,'roomnumber' => $roomnumber])->delete();
+    }
+
+    /**
+     * Date: 2021/6/29
+     * Time: 10:40
+     * @param string $roomnumber
+     * @param string $password
+     * @param int $uid
+     * @throws BusinessException
+     */
+    public function ContrastRoomPassword(string $roomnumber,string $password,int $uid)
+    {
+        $ContrastRoomPassword=Contrastroompasswordlog::find(['uid'=>$uid,'roomnumber'=>$roomnumber]);
+        //验证密码成功直接return
+        if($this->getRoomInfo($roomnumber)->getPassword()==$password){
+            //密码验证通过以后如果有不同过的记录存在直接删除
+            if($ContrastRoomPassword){
+                $ContrastRoomPassword->delete();
+            }
+            return;
+        }else{
+            if($ContrastRoomPassword){
+                //判断密码错误次数是否5次
+                if($ContrastRoomPassword->getCount()>=5)
+                {
+                    throw new BusinessException('密码验证失败5次,24小时以后才能进入');
+                }else{
+                    //返回剩余次数
+                    $ContrastRoomPassword->setCount($ContrastRoomPassword->getCount() + 1)->update();
+                    throw new BusinessException(sprintf('密码验证失败您还有%s 机会',5 - $ContrastRoomPassword->getCount()));
+                }
+            }else{
+                //首次输错密码加入记录
+                $ContrastRoomPassword->setUid($uid)->setRoomnumber($roomnumber)->setAddTime(time())->insert();
+                throw new BusinessException('密码验证失败还有4次机会');
+            }
+
+        }
     }
 }

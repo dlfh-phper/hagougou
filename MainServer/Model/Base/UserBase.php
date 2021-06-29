@@ -37,6 +37,7 @@ use Imi\Model\Annotation\Entity;
   `region` varchar(255) NOT NULL COMMENT '地区',
   `birthday` varchar(255) NOT NULL COMMENT '生日',
   `realname` int(11) NOT NULL DEFAULT '0' COMMENT '是否实名默认0 实名1',
+  `Intimacy` longtext COMMENT '\r\n\r\n亲密关系',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $userId 自增id
@@ -64,6 +65,9 @@ use Imi\Model\Annotation\Entity;
  * @property string $region 地区
  * @property string $birthday 生日
  * @property int $realname 是否实名默认0 实名1
+ * @property string $intimacy 
+
+亲密关系
  */
 abstract class UserBase extends Model
 {
@@ -788,6 +792,41 @@ abstract class UserBase extends Model
     public function setRealname($realname)
     {
         $this->realname = $realname;
+        return $this;
+    }
+
+    /**
+     * 
+
+亲密关系
+     * Intimacy
+     * @Column(name="Intimacy", type="longtext", length=0, accuracy=0, nullable=true, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $intimacy;
+
+    /**
+     * 获取 intimacy - 
+
+亲密关系
+     *
+     * @return string
+     */ 
+    public function getIntimacy()
+    {
+        return $this->intimacy;
+    }
+
+    /**
+     * 赋值 intimacy - 
+
+亲密关系
+     * @param string $intimacy Intimacy
+     * @return static
+     */ 
+    public function setIntimacy($intimacy)
+    {
+        $this->intimacy = $intimacy;
         return $this;
     }
 

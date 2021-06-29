@@ -175,10 +175,10 @@ class RoomController extends SingletonHttpController
      * @param int $page
      * @param int $page_size
      */
-    public function SearchRoomBlack(string $Search,int $page,int $page_size)
+    public function SearchRoomBlack(string $Search,int $page,int $page_size,string $roomnumber)
     {
         return [
-            'data' => $this->RoomService->SearchRoomBlack($Search,$page,$page_size)
+            'data' => $this->RoomService->SearchRoomBlack($Search,$page,$page_size,$roomnumber)
         ];
     }
 
@@ -193,5 +193,22 @@ class RoomController extends SingletonHttpController
     public function RemoveBlack(int $uid,int $roomnumber)
     {
         $this->RoomService->RemoveBlack($uid,$roomnumber);
+    }
+
+    /**
+     * Date: 2021/6/29
+     * Time: 14:25
+     * @Action
+     * @Route(method="POST")
+     * @param string $roomnumber
+     * @param string $password
+     * @return array
+     * 密码验证
+     */
+    public function ContrastRoomPassword(string $roomnumber,string $password)
+    {
+        return [
+            'data' => $this->RoomService->ContrastRoomPassword($roomnumber,$password,Session::get('user_id'))
+        ];
     }
 }
