@@ -39,6 +39,16 @@ class RoomController extends SingletonHttpController
      */
     protected $ApiService;
     /**
+     * @var
+     * @Inject("GiftService");
+     */
+    protected $GiftService;
+    /**
+     * @var
+     * @Inject("EmoticonService");
+     */
+    protected $EmoticonService;
+    /**
      * Date: 2021/5/20
      * Time: 13:48
      * @Action
@@ -209,6 +219,73 @@ class RoomController extends SingletonHttpController
     {
         return [
             'data' => $this->RoomService->ContrastRoomPassword($roomnumber,$password,Session::get('user_id'))
+        ];
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 10:26
+     * @Action
+     * @Route(method="POST")
+     * @param int $uid
+     * @param string $roomnumber
+     */
+    public function setRoomMaiWei(string $roomnumber, int $desc)
+    {
+        $this->RoomService->setRoomMaiWei(Session::get('user_id'),$roomnumber,$desc);
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 10:27
+     * @Action
+     * @Route(method="POST")
+     * @param string $roomnumber
+     */
+    public function Lower(string $roomnumber,int $uid)
+    {
+        $this->RoomService->Lower($roomnumber,$uid);
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 10:30
+     * @Action
+     * @Route(method="POST")
+     * @param string $roomnumber
+     * @return array
+     */
+    public function getRoomMaiWeiInfo(string $roomnumber)
+    {
+        return [
+            'data' => $this->RoomService->getRoomMaiWeiInfo($roomnumber)
+        ];
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 13:53
+     * @Action
+     * @Route(method="POST")
+     * @param string $roomnumber
+     * @param int $shop_id
+     * @param int $accept_id
+     */
+    public function RoomSendGift(string $roomnumber,int $shop_id,int $accept_id)
+    {
+        $this->GiftService->RoomSendGift($roomnumber,$shop_id,$accept_id,Session::get('user_id'));
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 16:37
+     * @Action
+     * @Route(method="POST")
+     */
+    public function getEmoticonList(int $page,int $page_size)
+    {
+        return [
+            'data' => $this->EmoticonService->getEmoticonList($page,$page_size)
         ];
     }
 }

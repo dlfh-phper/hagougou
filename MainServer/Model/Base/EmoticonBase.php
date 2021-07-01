@@ -8,22 +8,22 @@ use Imi\Model\Annotation\Column;
 use Imi\Model\Annotation\Entity;
 
 /**
- * node 基类
+ * emoticon 基类
  * @Entity
- * @Table(name="node", id={"id"})
- * @DDL("CREATE TABLE `node` (
+ * @Table(name="emoticon", id={"id"})
+ * @DDL("CREATE TABLE `emoticon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL COMMENT '节点名称',
-  `moudle_id` int(11) NOT NULL COMMENT '模块id',
-  `add_time` int(11) NOT NULL,
+  `url` varchar(255) NOT NULL COMMENT '内容',
+  `name` varchar(255) NOT NULL COMMENT '名称',
+  `add_time` int(11) NOT NULL COMMENT '时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
  * @property int $id 
- * @property string $nodeName 节点名称
- * @property int $moudleId 模块id
- * @property int $addTime 
+ * @property string $url 内容
+ * @property string $name 名称
+ * @property int $addTime 时间
  */
-abstract class NodeBase extends Model
+abstract class EmoticonBase extends Model
 {
     /**
      * id
@@ -36,7 +36,7 @@ abstract class NodeBase extends Model
      * 获取 id
      *
      * @return int
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -46,7 +46,7 @@ abstract class NodeBase extends Model
      * 赋值 id
      * @param int $id id
      * @return static
-     */ 
+     */
     public function setId($id)
     {
         $this->id = $id;
@@ -54,64 +54,65 @@ abstract class NodeBase extends Model
     }
 
     /**
-     * 节点名称
-     * node_name
+     * 内容
+     * url
+     * @Column(name="url", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * 获取 url - 内容
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * 赋值 url - 内容
+     * @param string $url url
+     * @return static
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * 名称
+     * name
      * @Column(name="name", type="varchar", length=255, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var string
      */
-    protected $Name;
+    protected $name;
 
     /**
-     * 获取 nodeName - 节点名称
+     * 获取 name - 名称
      *
      * @return string
-     */ 
+     */
     public function getName()
     {
-        return $this->Name;
+        return $this->name;
     }
 
     /**
-     * 赋值 nodeName - 节点名称
-     * @param string $nodeName node_name
+     * 赋值 name - 名称
+     * @param string $name name
      * @return static
-     */ 
-    public function setName($Name)
-    {
-        $this->Name = $Name;
-        return $this;
-    }
-
-    /**
-     * 模块id
-     * moudle_id
-     * @Column(name="moudle_id", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
-     * @var int
      */
-    protected $moudleId;
-
-    /**
-     * 获取 moudleId - 模块id
-     *
-     * @return int
-     */ 
-    public function getMoudleId()
+    public function setName($name)
     {
-        return $this->moudleId;
-    }
-
-    /**
-     * 赋值 moudleId - 模块id
-     * @param int $moudleId moudle_id
-     * @return static
-     */ 
-    public function setMoudleId($moudleId)
-    {
-        $this->moudleId = $moudleId;
+        $this->name = $name;
         return $this;
     }
 
     /**
+     * 时间
      * add_time
      * @Column(name="add_time", type="int", length=11, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
      * @var int
@@ -119,20 +120,20 @@ abstract class NodeBase extends Model
     protected $addTime;
 
     /**
-     * 获取 addTime
+     * 获取 addTime - 时间
      *
      * @return int
-     */ 
+     */
     public function getAddTime()
     {
         return $this->addTime;
     }
 
     /**
-     * 赋值 addTime
+     * 赋值 addTime - 时间
      * @param int $addTime add_time
      * @return static
-     */ 
+     */
     public function setAddTime($addTime)
     {
         $this->addTime = $addTime;

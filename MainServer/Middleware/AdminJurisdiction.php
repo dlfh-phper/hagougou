@@ -18,12 +18,14 @@ class AdminJurisdiction extends Middleware
     //中间件验证用户是否有这个权限
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $params=$request->getUri();
+        $body=$request->getParsedBody();
+//        $params=$request->post();
+//        var_dump($params);
         //获取请求参数
-        $paramsquery=$params->getQuery();
-        $arr=explode('&',$paramsquery);
-        $moudle_id=substr($arr['0'],'7');
-        $node_id=substr($arr['1'],'5');
+//        $paramsquery=$params->getQuery();
+
+        $moudle_id=$body['moudle'];
+        $node_id=$body['node'];
         if($moudle_id=='' or $node_id=='')
         {
             throw new BusinessException('权限错误');

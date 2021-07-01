@@ -12,6 +12,7 @@ use ImiApp\MainServer\Model\Gift;
 use ImiApp\MainServer\Model\Headframe;
 use ImiApp\MainServer\Model\Room;
 use ImiApp\MainServer\Model\Roomblack;
+use ImiApp\MainServer\Model\RoomMaiWei;
 use ImiApp\MainServer\Model\Rootlabel;
 use Imi\Aop\Annotation\Inject;
 
@@ -342,5 +343,63 @@ class RoomService
             }
 
         }
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 10:16
+     * @param int $uid
+     * @param string $roomnumber
+     * @throws BusinessException
+     * 上麦
+     */
+    public function setRoomMaiWei(int $uid ,string $roomnumber,int $desc)
+    {
+        $info=RoomMaiWei::find(['uid' => $uid,'roomnumber'=>$roomnumber]);
+        if($info){
+            //已经上麦，直接修改麦位
+            $info->setDesc($desc)->update();
+        }else{
+            $RoomMaiWei=RoomMaiWei::query()->where('roomnumber','=',$roomnumber)->select()->getRowCount();
+            if($RoomMaiWei>=8){
+                throw new BusinessException('麦位人数已满');
+            }else{
+                RoomMaiWei::newInstance()
+                    ->setUid($uid)
+                    ->setRoomnumber($roomnumber)
+                    ->setDesc($desc)
+                    ->setAddTime(time())
+                    ->insert();
+            }
+        }
+
+    }
+
+    /**
+     * Date: 2021/7/1
+     * Time: 10:20
+     * @param int $uid
+     * @param string $roomnumber
+     * 下麦
+     */
+    public function Lower(string $roomnumber,int $uid)
+    {
+        RoomMaiWei::find(['roomnumber'=>$roomnumber,'uid'=>$uid])->delete();
+    }
+
+    /***
+     * Date: 2021/7/1
+     * Time: 10:25
+     * @param string $roomnumber
+     * @return array
+     * 直播间麦位人员信息
+     */
+    public function getRoomMaiWeiInfo(string $roomnumber)
+    {
+        $RoomMaiWei=RoomMaiWei::dbQuery()->where('roomnumber','=',$roomnumber)->select()->getArray();
+        foreach ($RoomMaiWei as $key=>$value){
+            $RoomMaiWei[$key]['userinfo'] = $this->UserService->getUserInfo($value['uid']);
+        }
+        return $RoomMaiWei;
     }
 }

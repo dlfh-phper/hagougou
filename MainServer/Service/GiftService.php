@@ -15,6 +15,7 @@ use ImiApp\MainServer\Model\Intimacy;
 use ImiApp\MainServer\Model\Jiyou;
 use ImiApp\MainServer\Model\Knapsack;
 use Imi\Db\Annotation\Transaction;
+use ImiApp\MainServer\Model\Roomsendgiftlog;
 use ImiApp\MainServer\Model\User;
 use Imi\Aop\Annotation\Inject;
 
@@ -254,7 +255,7 @@ class GiftService
             ->setAddTime(time())
             ->setPrice($price)
             ->insert();
-        $this->ReduceUserBalance($uid,$Gift);
+        $this->ReduceUserBalance($uid,$accept_id,$Gift);
     }
 
     /**
@@ -276,7 +277,7 @@ class GiftService
             ->setCountvalue($price)
             ->setAddTime(time())
             ->insert();
-        $this->ReduceUserBalance($uid,$Gift);
+        $this->ReduceUserBalance($uid,$accept_id,$Gift);
     }
 
     /**
@@ -312,7 +313,7 @@ class GiftService
             ->setCountvalue($price)
             ->setAddTime(time())
             ->insert();
-        $this->ReduceUserBalance($uid,$Gift);
+        $this->ReduceUserBalance($uid,$accept_id,$Gift);
     }
     /**
      * Date: 2021/6/23
@@ -337,13 +338,40 @@ class GiftService
      * Time: 16:09
      * 减少用户余额正增加财富
      */
-    protected  function ReduceUserBalance($uid,$Gift)
+    protected  function ReduceUserBalance($uid,$accept_id,$Gift)
     {
 
+        //增加送礼人的财富值
         $this->UserService->getUserInfo($uid)
             ->setBalance(
                 $this->UserService->getUserInfo($uid)->getBalance() - $Gift->getPrice()
             )->setWealthvalue($this->UserService->getUserInfo($uid)->getBalance() + $Gift->getPrice())->update();
+        //增加接受礼物的魅力值
+        $this->UserService->getUserInfo($accept_id)->setCharmvalue(
+            $this->UserService->getUserInfo($uid)->getCharmvalue() + $Gift->getPrice()
+        )->update();
+    }
+
+    /***
+     * Date: 2021/7/1
+     * Time: 11:09
+     * @param string $roomnumber
+     * @param int $shop_id
+     * @param int $accept_id
+     * @param int $uid
+     */
+    public function RoomSendGift(string $roomnumber,int $shop_id,int $accept_id,int $uid)
+    {
+        $Gift=Gift::find($shop_id);
+        Roomsendgiftlog::newInstance()
+            ->setRoomnumber($roomnumber)
+            ->setUid($uid)
+            ->setAcceptId($accept_id)
+            ->setShop($shop_id)
+            ->setPrice($Gift->getPrice())
+            ->setAddTime(time())
+            ->insert();
+        $this->ReduceUserBalance($uid,$accept_id,$Gift);
     }
 //    public function GiveCpGift(int $shop_id,int $accept_id,int $uid)
 //    {

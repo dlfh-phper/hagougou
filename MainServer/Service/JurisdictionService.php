@@ -98,7 +98,7 @@ class JurisdictionService
     {
         $list = Moudle::dbQuery()->page($page, $page_size)->select()->getArray();
         foreach ($list as $key => $value) {
-            $list[$key]['node'] = Node::query()->where('moudle_id', '=', $value['id'])->select()->getArray();
+            $list[$key]['children'] = Node::query()->where('moudle_id', '=', $value['id'])->select()->getArray();
         }
         $count = Moudle::count('id');
 

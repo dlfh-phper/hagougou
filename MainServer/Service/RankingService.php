@@ -4,6 +4,7 @@
 namespace ImiApp\MainServer\Service;
 
 use Imi\Bean\Annotation\Bean;
+use ImiApp\MainServer\Model\Cp;
 use ImiApp\MainServer\Model\Intimacy;
 use ImiApp\MainServer\Model\User;
 
@@ -55,6 +56,9 @@ class RankingService
     }
     public static function cp($page,$page_size)
     {
-         return 0;
+        return [
+            'list' => Cp::query()->order('countvalue','desc')->page($page,$page_size)->select()->getArray(),
+            'count' => Cp::count()
+        ];
     }
 }
