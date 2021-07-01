@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ImiApp\MainServer\Middleware;
+namespace ImiApp\MainServer\WebSocketMiddleware;
 
 use ImiApp\Enum\MessageCode;
 use Imi\Bean\Annotation\Bean;
@@ -10,11 +10,8 @@ use Imi\Server\WebSocket\Message\IFrame;
 use Imi\Server\WebSocket\IMessageHandler;
 use Imi\Server\WebSocket\Middleware\IMiddleware;
 use ImiApp\MainServer\Exception\BusinessException;
-
 /**
- * Class ReturnMessageMiddleware
- * @package ImiApp\MainServer\Middleware
- * @Bean("ReturnMessageMiddleware");
+ * @Bean("ReturnMessageMiddleware")
  */
 class ReturnMessageMiddleware implements IMiddleware
 {

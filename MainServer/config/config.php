@@ -7,6 +7,7 @@ return [
     // bean扫描目录
     'beanScan'    =>    [
         'ImiApp\Enum',
+        'ImiApp\Listener',
         'ImiApp\MainServer\Aop',
         'ImiApp\MainServer\Controller',
         'ImiApp\MainServer\Exception',
@@ -16,6 +17,7 @@ return [
         'ImiApp\MainServer\Service',
         'ImiApp\MainServer\Model',
         'ImiApp\MainServer\AdminController',
+        'ImiApp\MainServer\WebSocketMiddleware',
         'ImiApp\MainServer\Cron',
     ],
     'beans'    =>    [
@@ -99,10 +101,17 @@ return [
             // 无配置项
         ],
         'ConnectContextStore'   =>  [
-            'handlerClass'  =>  \Imi\Server\ConnectContext\StoreHandler\Local::class,
+            'handlerClass'  =>  \Imi\Server\ConnectContext\StoreHandler\Redis::class,
         ],
-        'ConnectContextLocal'    =>    [
-            'lockId'    =>  'redis',
+        'ConnectContextRedis'    =>    [
+            'redisPool'    => 'redis', // Redis 连接池名称
+            'redisDb'      => 0, // redis中第几个库
+            'key'          => 'imi:connect_context', // 键
+            'heartbeatTimespan' => 5, // 心跳时间，单位：秒
+            'heartbeatTtl' => 8, // 心跳数据过期时间，单位：秒
+            'dataEncode'=>  'serialize', // 数据写入前编码回调
+            'dataDecode'=>  'unserialize', // 数据读出后处理回调
+            'lockId'    =>  null, // 非必设，可以用锁来防止数据错乱问题
         ],
         'aliyun' => [
             'key' => 'LTAI5tP78X7mh6NPHkrfdmnB',
